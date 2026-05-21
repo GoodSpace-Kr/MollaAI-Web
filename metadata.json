@@ -1,0 +1,8 @@
+{
+  "name": "Molla AI",
+  "description": "영어 공포증을 극복하게 해주는 AI 기반 원어민 전화 회화 서비스",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

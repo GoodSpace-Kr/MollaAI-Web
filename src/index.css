@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  
+  /* Brand Colors from Design Spec */
+  --color-surface: #f7f9fb;
+  --color-surface-dim: #d8dadc;
+  --color-surface-bright: #f7f9fb;
+  --color-surface-container-low: #f2f4f6;
+  --color-surface-container: #eceef0;
+  --color-on-surface: #191c1e;
+  --color-on-surface-variant: #434654;
+  
+  --color-primary: #1a53c8;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #3e6ee3;
+  
+  --color-secondary: #515f78;
+  --color-secondary-container: #d1e0fe;
+  
+  --color-tertiary: #914805;
+  --color-tertiary-container: #b06020;
+  --color-error: #ba1a1a;
+  
+  --color-secondary-fixed: #d5e3ff;
+  --color-secondary-fixed-dim: #b8c7e4;
+  
+  /* Typography presets */
+  --font-display: "Pretendard Variable", sans-serif;
+  
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-surface text-on-surface font-sans;
+  }
+  
+  h1 {
+    @apply font-bold tracking-tight text-on-surface;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 1.1;
+  }
+  
+  h2 {
+    @apply font-semibold tracking-tight text-on-surface;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    line-height: 1.2;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+/* Custom Scroll Revealed Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
