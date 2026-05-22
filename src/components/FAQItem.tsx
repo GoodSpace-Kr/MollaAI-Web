@@ -2,12 +2,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-interface FAQItemProps {
+type FAQItemProps = {
   question: string;
   answer: string;
-}
+};
 
-function FAQItem({ question, answer }: FAQItemProps) {
+const FAQItem = ({ question, answer }: FAQItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -41,6 +41,6 @@ function FAQItem({ question, answer }: FAQItemProps) {
       </AnimatePresence>
     </div>
   );
-}
+};
 
 export default FAQItem;

@@ -1,42 +1,62 @@
 import { ReactNode } from "react";
 import { Brain, CalendarClock, UserX } from "lucide-react";
 
-// ─── 타입 정의 ───────────────────────────────────────────────────────────────
+// 타입 정의
 
-export interface Problem {
+type Problem = {
   icon: ReactNode;
   title: string;
   desc: string;
-}
+};
 
-export interface CourseItem {
+type CourseItem = {
   title: string;
   desc: string;
   color: string;
-}
+};
 
-export interface PlanItem {
+type PlanItem = {
   name: string;
   monthlyPrice: string;
   yearlyPrice: string;
   desc: string;
   features: string[];
   popular: boolean;
-}
+};
 
-export interface ReviewItem {
+type ReviewItem = {
   name: string;
   role: string;
   text: string;
   stars: number;
-}
+};
 
-export interface InfoColumn {
+type InfoColumn = {
   title: string;
   links: string[];
-}
+};
 
-// ─── 데이터 ───────────────────────────────────────────────────────────────────
+export type NavItem = {
+  label: string;
+  id: string;
+};
+
+type FAQ = {
+  question: string;
+  answer: string;
+};
+
+// 데이터
+
+export const Navigation: NavItem[] = [
+  { label: "서비스 소개", id: "서비스 소개" },
+  { label: "학습 코스", id: "학습 코스" },
+  { label: "요금", id: "요금" },
+  { label: "후기", id: "후기" },
+  { label: "FAQ", id: "FAQ" },
+  { label: "위치", id: "위치" },
+  { label: "문의하기", id: "문의하기" },
+];
 
 export const Problems: Problem[] = [
   {
@@ -57,14 +77,42 @@ export const Problems: Problem[] = [
 ];
 
 export const Course: CourseItem[] = [
-  { title: "일상 대화", desc: "친구와의 약속, 날씨 이야기", color: "bg-blue-50" },
-  { title: "비즈니스", desc: "회의, 이메일, 프리젠테이션", color: "bg-indigo-50" },
-  { title: "해외 여행", desc: "호텔 체크인, 길 찾기, 주문", color: "bg-orange-50" },
+  {
+    title: "일상 대화",
+    desc: "친구와의 약속, 날씨 이야기",
+    color: "bg-blue-50",
+  },
+  {
+    title: "비즈니스",
+    desc: "회의, 이메일, 프리젠테이션",
+    color: "bg-indigo-50",
+  },
+  {
+    title: "해외 여행",
+    desc: "호텔 체크인, 길 찾기, 주문",
+    color: "bg-orange-50",
+  },
   { title: "인터뷰 대비", desc: "영어 면접, 자기소개", color: "bg-emerald-50" },
-  { title: "이슈/토론", desc: "최신 뉴스에 대한 의견 교환", color: "bg-purple-50" },
-  { title: "생활 영어", desc: "병원, 은행, 마트 이용하기", color: "bg-rose-50" },
-  { title: "감정 표현", desc: "기쁨, 슬픔, 위로 표현하기", color: "bg-amber-50" },
-  { title: "취미/관심사", desc: "영화, 음악, 스포츠 이야기", color: "bg-teal-50" },
+  {
+    title: "이슈/토론",
+    desc: "최신 뉴스에 대한 의견 교환",
+    color: "bg-purple-50",
+  },
+  {
+    title: "생활 영어",
+    desc: "병원, 은행, 마트 이용하기",
+    color: "bg-rose-50",
+  },
+  {
+    title: "감정 표현",
+    desc: "기쁨, 슬픔, 위로 표현하기",
+    color: "bg-amber-50",
+  },
+  {
+    title: "취미/관심사",
+    desc: "영화, 음악, 스포츠 이야기",
+    color: "bg-teal-50",
+  },
 ];
 
 export const Plan: PlanItem[] = [
@@ -135,7 +183,13 @@ export const Review: ReviewItem[] = [
 export const Info: InfoColumn[] = [
   {
     title: "제품",
-    links: ["서비스 소개", "학습 코스", "요금제", "자주 묻는 질문", "기업 도입"],
+    links: [
+      "서비스 소개",
+      "학습 코스",
+      "요금제",
+      "자주 묻는 질문",
+      "기업 도입",
+    ],
   },
   {
     title: "회사",
@@ -144,5 +198,28 @@ export const Info: InfoColumn[] = [
   {
     title: "법률",
     links: ["이용약관", "개인정보처리방침", "환불규정", "청소년보호정책"],
+  },
+];
+
+export const FAQ: FAQ[] = [
+  {
+    question: "정말 070 번호로 전화만 걸면 되나요?",
+    answer:
+      "네, 맞습니다. 별도의 전용 앱 설치나 복잡한 설정 없이, 부여받은 회원 전용 070 번호로 전화를 거시면 바로 대화가 시작됩니다. 해외에서도 로밍 없이 인터넷 전화 등을 통해 이용 가능합니다.",
+  },
+  {
+    question: "무료 체험은 어떻게 진행되나요?",
+    answer:
+      "회원가입 후 첫 통화(최대 10분)는 완전히 무료로 제공됩니다. 직접 대화해 보시고 AI의 자연스러움을 느껴보세요. 카드 정보 등록도 필요 없습니다.",
+  },
+  {
+    question: "리포트는 언제 받을 수 있나요?",
+    answer:
+      "통화가 종료된 후 1분 내외로 카카오톡 또는 문자를 통해 상세 리포트 링크가 전송됩니다. 대화 전체 텍스트, 문법 교정, 추천 표현, 그리고 당신의 유창성 점수를 확인하실 수 있습니다.",
+  },
+  {
+    question: "학습 시간 제한이 있나요?",
+    answer:
+      "요금제에 따라 다르지만, 기본적으로 24시간 언제든 원하실 때 이용 가능합니다. 예약할 필요 없이 당신이 여유 있는 시간이 바로 학습 시간이 됩니다.",
   },
 ];

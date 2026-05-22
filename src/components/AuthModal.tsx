@@ -2,14 +2,16 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 
-interface AuthModalProps {
+type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
   type: "login" | "signup";
-}
+};
 
-function AuthModal({ isOpen, onClose, type }: AuthModalProps) {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">(type || "login");
+const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
+  const [activeTab, setActiveTab] = useState<"login" | "signup">(
+    type || "login",
+  );
 
   if (!isOpen) return null;
 
@@ -111,6 +113,6 @@ function AuthModal({ isOpen, onClose, type }: AuthModalProps) {
       </div>
     </AnimatePresence>
   );
-}
+};
 
 export default AuthModal;

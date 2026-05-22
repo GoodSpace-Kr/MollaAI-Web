@@ -1,38 +1,24 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   Phone,
-  MessageCircle,
-  BarChart3,
   Brain,
-  UserX,
-  CalendarClock,
   ArrowRight,
-  Menu,
-  X,
   Star,
   MapPin,
   Mail,
-  ChevronDown,
-  ChevronUp,
-  LogIn,
-  UserPlus,
   Check,
-  Instagram,
-  Twitter,
-  Facebook,
-  Github,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import logo from "./assest/logo.png";
-import AuthModal from "../components/AuthModal";
-import FAQItem from "../components/FAQItem";
-import { Course, Info, Plan, Problems, Review } from "./constants/mockData";
-import Footer from "../components/common/Footer";
+import AuthModal from "./components/AuthModal";
+import FAQItem from "./components/FAQItem";
+import { Course, FAQ, Plan, Problems, Review } from "./constants/mockData";
+import Footer from "./components/common/Footer";
+import Navigation from "./components/common/Navigation";
 
-interface AuthModalState {
+type AuthModalState = {
   isOpen: boolean;
   type: "login" | "signup";
-}
+};
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -95,127 +81,14 @@ export default function App() {
         type={authModal.type}
       />
 
-      {/* Navigation */}
-      <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-surface/80 backdrop-blur-md shadow-sm py-2"
-            : "bg-transparent py-4"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
-          <div
-            className="flex items-center cursor-pointer shrink-0"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            <img
-              src={logo}
-              alt="Molla AI Logo"
-              className="h-20 lg:h-28 w-auto"
-            />
-          </div>
-
-          {/* Tablet & PC Menu */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
-            {[
-              "서비스 소개",
-              "학습 코스",
-              "요금",
-              "후기",
-              "FAQ",
-              "위치",
-              "문의하기",
-            ].map((item) => (
-              <a
-                key={item}
-                href={`#${item}`}
-                onClick={(e) => scrollToSection(e, item)}
-                className="text-on-surface-variant hover:text-primary transition-colors text-[11px] lg:text-sm font-semibold whitespace-nowrap"
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center gap-2 lg:gap-4 shrink-0">
-            <button
-              onClick={openLogin}
-              className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
-            >
-              <LogIn size={16} className="lg:w-[18px] lg:h-[18px]" />
-              로그인
-            </button>
-            <button
-              onClick={openSignup}
-              className="bg-primary text-on-primary px-4 lg:px-6 py-2 lg:py-2.5 rounded-full font-bold text-[11px] lg:text-sm hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 flex items-center gap-1 lg:gap-2 whitespace-nowrap"
-            >
-              <UserPlus size={16} className="lg:w-[18px] lg:h-[18px]" />
-              무료 시작
-            </button>
-          </div>
-
-          {/* Mobile Hamburger (Only below md) */}
-          <button
-            className="md:hidden p-2 text-on-surface"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="absolute top-full left-0 w-full bg-white border-t border-surface-container overflow-hidden md:hidden shadow-xl"
-            >
-              <div className="p-6 flex flex-col gap-4">
-                {[
-                  "서비스 소개",
-                  "학습 코스",
-                  "요금",
-                  "후기",
-                  "FAQ",
-                  "위치",
-                  "문의하기",
-                ].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item}`}
-                    className="text-on-surface-variant py-2 font-semibold"
-                    onClick={(e) => scrollToSection(e, item)}
-                  >
-                    {item}
-                  </a>
-                ))}
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  <button
-                    onClick={() => {
-                      openLogin();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
-                  >
-                    로그인
-                  </button>
-                  <button
-                    onClick={() => {
-                      openSignup();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="bg-primary text-on-primary py-3 rounded-xl font-bold"
-                  >
-                    시작하기
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+      <Navigation
+        isScrolled={isScrolled}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+        openLogin={openLogin}
+        openSignup={openSignup}
+        scrollToSection={scrollToSection}
+      />
 
       <main>
         {/* Hero Section */}
@@ -591,22 +464,13 @@ export default function App() {
             {...fadeIn}
             className="bg-white rounded-[32px] p-8 md:p-12 shadow-xl shadow-primary/5 border border-surface-container"
           >
-            <FAQItem
-              question="정말 070 번호로 전화만 걸면 되나요?"
-              answer="네, 맞습니다. 별도의 전용 앱 설치나 복잡한 설정 없이, 부여받은 회원 전용 070 번호로 전화를 거시면 바로 대화가 시작됩니다. 해외에서도 로밍 없이 인터넷 전화 등을 통해 이용 가능합니다."
-            />
-            <FAQItem
-              question="무료 체험은 어떻게 진행되나요?"
-              answer="회원가입 후 첫 통화(최대 10분)는 완전히 무료로 제공됩니다. 직접 대화해 보시고 AI의 자연스러움을 느껴보세요. 카드 정보 등록도 필요 없습니다."
-            />
-            <FAQItem
-              question="리포트는 언제 받을 수 있나요?"
-              answer="통화가 종료된 후 1분 내외로 카카오톡 또는 문자를 통해 상세 리포트 링크가 전송됩니다. 대화 전체 텍스트, 문법 교정, 추천 표현, 그리고 당신의 유창성 점수를 확인하실 수 있습니다."
-            />
-            <FAQItem
-              question="학습 시간 제한이 있나요?"
-              answer="요금제에 따라 다르지만, 기본적으로 24시간 언제든 원하실 때 이용 가능합니다. 예약할 필요 없이 당신이 여유 있는 시간이 바로 학습 시간이 됩니다."
-            />
+            {FAQ.map((item) => (
+              <FAQItem
+                key={item.question}
+                question={item.question}
+                answer={item.answer}
+              />
+            ))}
           </motion.div>
         </section>
 

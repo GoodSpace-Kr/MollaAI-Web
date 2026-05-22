@@ -1,8 +1,8 @@
 import { Instagram, Twitter, Facebook, Github } from "lucide-react";
 import logo from "../../src/assest/logo.png";
-import { Info } from "../../src/constants/mockData";
+import { Info } from "src/constants/mockData";
 
-function Footer() {
+const Footer = () => {
   return (
     <footer className="bg-surface py-20 px-6 md:px-12 border-t border-surface-container">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -74,6 +74,6 @@ function Footer() {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;
