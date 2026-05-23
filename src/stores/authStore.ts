@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type User = {
   id: string;
@@ -23,36 +24,49 @@ type AuthState = {
   clearAuth: () => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-  accessToken: null,
-  refreshToken: null,
-  user: null,
-  isAuthenticated: false,
-
-  setTokens: ({ accessToken, refreshToken }) =>
-    set({
-      accessToken,
-      refreshToken,
-      isAuthenticated: true,
-    }),
-
-  setAccessToken: (accessToken) =>
-    set({
-      accessToken,
-      isAuthenticated: true,
-    }),
-
-  setUser: (user) =>
-    set({
-      user,
-      isAuthenticated: true,
-    }),
-
-  clearAuth: () =>
-    set({
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
       accessToken: null,
       refreshToken: null,
       user: null,
       isAuthenticated: false,
+
+      setTokens: ({ accessToken, refreshToken }) =>
+        set({
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+        }),
+
+      setAccessToken: (accessToken) =>
+        set({
+          accessToken,
+          isAuthenticated: true,
+        }),
+
+      setUser: (user) =>
+        set({
+          user,
+          isAuthenticated: true,
+        }),
+
+      clearAuth: () =>
+        set({
+          accessToken: null,
+          refreshToken: null,
+          user: null,
+          isAuthenticated: false,
+        }),
     }),
-}));
+    {
+      name: "molla-auth", // localStorage 키 이름
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);
