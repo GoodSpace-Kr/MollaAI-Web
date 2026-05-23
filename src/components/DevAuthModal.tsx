@@ -2,100 +2,53 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { registerUser, sendAuthCode, verifyAuthCode } from "@/api/authApi";
+
+import { devLogin } from "@/api/authApi1";
+import { registerUser } from "@/api/authApi";
 import { useAuthStore } from "@/stores/authStore";
 
-type AuthModalProps = {
+type DevAuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
   type: "login" | "signup";
 };
 
-type AuthStep = "phone" | "code" | "name";
+type DevAuthStep = "phone" | "name";
 
-const CODE_TIME_LIMIT = 300;
-
-const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
+const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
   const navigate = useNavigate();
-
   const { setTokens, setUser } = useAuthStore();
 
   const [activeTab, setActiveTab] = useState<"login" | "signup">(type);
-  const [step, setStep] = useState<AuthStep>("phone");
+  const [step, setStep] = useState<DevAuthStep>("phone");
 
   const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [timeLeft, setTimeLeft] = useState(CODE_TIME_LIMIT);
 
-  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isSignup = activeTab === "signup";
-  const isCodeExpired = step === "code" && timeLeft <= 0;
-
-  const formattedTime = `${Math.floor(timeLeft / 60)}:${String(
-    timeLeft % 60,
-  ).padStart(2, "0")}`;
 
   useEffect(() => {
     if (isOpen) {
       setActiveTab(type);
       setStep("phone");
       setPhone("");
-      setCode("");
       setName("");
       setErrorMessage("");
-      setTimeLeft(CODE_TIME_LIMIT);
     }
   }, [isOpen, type]);
 
-  useEffect(() => {
-    if (step !== "code" || timeLeft <= 0) return;
-
-    const timer = window.setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => window.clearTimeout(timer);
-  }, [step, timeLeft]);
-
-  const resetCodeStep = () => {
-    setCode("");
-    setErrorMessage("");
-    setTimeLeft(CODE_TIME_LIMIT);
-    setStep("code");
-  };
-
-  const handleSendCode = async () => {
+  const handleDevLogin = async () => {
     if (!phone.trim()) return;
 
     try {
       setIsLoading(true);
       setErrorMessage("");
 
-      await sendAuthCode({
+      const result = await devLogin({
         phoneNumber: phone,
-      });
-
-      resetCodeStep();
-    } catch (error) {
-      setErrorMessage("인증번호 전송에 실패했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleVerifyCode = async () => {
-    if (!code.trim() || isCodeExpired) return;
-
-    try {
-      setIsLoading(true);
-      setErrorMessage("");
-
-      const result = await verifyAuthCode({
-        phoneNumber: phone,
-        code,
       });
 
       setTokens({
@@ -103,21 +56,21 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         refreshToken: result.refreshToken,
       });
 
-      if (result.isNewUser) {
+      if (isSignup) {
         setStep("name");
         return;
       }
 
       onClose();
       navigate("/reports");
-    } catch (error) {
-      setErrorMessage("인증번호가 올바르지 않습니다. 다시 확인해주세요.");
+    } catch {
+      setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSignupComplete = async () => {
+  const handleRegisterName = async () => {
     if (!name.trim()) return;
 
     try {
@@ -132,35 +85,25 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
 
       onClose();
       navigate("/reports");
-    } catch (error) {
-      setErrorMessage("회원가입에 실패했습니다. 다시 시도해주세요.");
+    } catch {
+      setErrorMessage("이름 등록에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handlePrevStep = () => {
+    setStep("phone");
+    setName("");
     setErrorMessage("");
-
-    if (step === "code") {
-      setStep("phone");
-      setCode("");
-      return;
-    }
-
-    if (step === "name") {
-      resetCodeStep();
-    }
   };
 
   const changeAuthType = () => {
     setActiveTab((prev) => (prev === "login" ? "signup" : "login"));
     setStep("phone");
     setPhone("");
-    setCode("");
     setName("");
     setErrorMessage("");
-    setTimeLeft(CODE_TIME_LIMIT);
   };
 
   if (!isOpen) return null;
@@ -214,11 +157,6 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     step === "phone" ? "bg-primary" : "bg-surface-container"
                   }`}
                 />
-                <div
-                  className={`h-2 w-2 rounded-full ${
-                    step === "code" ? "bg-primary" : "bg-surface-container"
-                  }`}
-                />
                 {isSignup && (
                   <div
                     className={`h-2 w-2 rounded-full ${
@@ -246,79 +184,20 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   </div>
 
                   <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
-                    입력한 전화번호로 인증번호가 전송됩니다.
+                    SMS 인증 없이 전화번호만으로 토큰을 발급합니다.
                   </p>
 
                   <button
                     type="button"
-                    onClick={handleSendCode}
+                    onClick={handleDevLogin}
                     className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-primary/20 transition-all mt-4 disabled:opacity-50"
                     disabled={!phone.trim() || isLoading}
                   >
-                    {isLoading ? "전송 중..." : "인증번호 받기"}
-                  </button>
-                </>
-              )}
-
-              {step === "code" && (
-                <>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 ml-1">
-                      인증번호
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="인증번호 6자리"
-                        maxLength={6}
-                        className={`w-full px-4 py-3 pr-16 bg-surface rounded-xl border transition-all outline-none ${
-                          isCodeExpired
-                            ? "border-red-500 focus:border-red-500 focus:bg-white"
-                            : "border-transparent focus:border-primary focus:bg-white"
-                        }`}
-                      />
-
-                      <span
-                        className={`absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold ${
-                          isCodeExpired ? "text-red-500" : "text-primary"
-                        }`}
-                      >
-                        {formattedTime}
-                      </span>
-                    </div>
-
-                    {isCodeExpired && (
-                      <p className="mt-1 ml-2 text-xs text-red-500">
-                        인증 시간이 만료되었습니다. 인증번호를 다시 받아주세요.
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex justify-between items-center px-1">
-                    <p className="text-xs text-on-surface-variant">
-                      {phone}로 전송된 인증번호를 입력하세요.
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={handleSendCode}
-                      className="text-xs font-bold text-primary hover:underline disabled:opacity-50"
-                      disabled={isLoading}
-                    >
-                      재전송
-                    </button>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleVerifyCode}
-                    className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-primary/20 transition-all mt-4 disabled:opacity-50"
-                    disabled={!code.trim() || isCodeExpired || isLoading}
-                  >
-                    {isLoading ? "확인 중..." : "인증하기"}
+                    {isLoading
+                      ? "처리 중..."
+                      : isSignup
+                        ? "이름 등록하기"
+                        : "로그인하기"}
                   </button>
                 </>
               )}
@@ -339,12 +218,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   </div>
 
                   <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
-                    서비스에서 사용할 이름을 입력하면 회원가입이 완료됩니다.
+                    토큰 발급이 완료되었습니다. 이름을 등록하면 가입이
+                    완료됩니다.
                   </p>
 
                   <button
                     type="button"
-                    onClick={handleSignupComplete}
+                    onClick={handleRegisterName}
                     className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-primary/20 transition-all mt-4 disabled:opacity-50"
                     disabled={!name.trim() || isLoading}
                   >
@@ -369,7 +249,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                   className="ml-2 text-primary font-bold hover:underline"
                   disabled={isLoading}
                 >
-                  {isSignup ? "로그인하기" : "지금 가입하기"}
+                  {isSignup ? "로그인하기" : "회원가입하기"}
                 </button>
               </p>
             </div>
@@ -380,4 +260,4 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   );
 };
 
-export default AuthModal;
+export default DevAuthModal;

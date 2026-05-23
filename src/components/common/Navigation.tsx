@@ -1,14 +1,16 @@
 import { AnimatePresence, motion } from "motion/react";
-import { LogIn, Menu, UserPlus, X } from "lucide-react";
+import { LogIn, LogOut, Menu, X } from "lucide-react";
 import logo from "../../assest/logo.png";
 import { Navigation as NavItem } from "../../constants/mockData";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 
 type NavigationProps = {
   isScrolled: boolean;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openLogin: () => void;
-  openSignup: () => void;
+  openDevLogin: () => void;
   scrollToSection: (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
     id: string,
@@ -20,64 +22,96 @@ const Navigation = ({
   mobileMenuOpen,
   setMobileMenuOpen,
   openLogin,
-  openSignup,
+  openDevLogin,
   scrollToSection,
 }: NavigationProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, clearAuth } = useAuthStore();
+
+  const isLandingPage = location.pathname === "/";
+
+  const handleLogout = () => {
+    clearAuth();
+    navigate("/");
+  };
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-surface/80 backdrop-blur-md shadow-sm py-2"
-          : "bg-transparent py-4"
+          ? "bg-surface/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+        {/* 로고 */}
         <div
           className="flex items-center cursor-pointer shrink-0"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <img src={logo} alt="Molla AI Logo" className="h-20 lg:h-28 w-auto" />
+          <img src={logo} alt="Molla AI Logo" className="h-20 lg:h-30 w-auto" />
         </div>
 
-        <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
-          {NavItem.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={(e) => scrollToSection(e, item.id)}
-              className="text-on-surface-variant hover:text-primary transition-colors text-[11px] lg:text-sm font-semibold whitespace-nowrap"
+        {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
+        {isLandingPage && (
+          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
+            {NavItem.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => scrollToSection(e, item.id)}
+                className="text-on-surface-variant hover:text-primary transition-colors text-[11px] lg:text-sm font-semibold whitespace-nowrap"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* 데스크톱 버튼 영역 */}
+        <div className="hidden md:flex items-center gap-2 lg:gap-4 shrink-0 ml-auto">
+          {isAuthenticated ? (
+            /* 인증 상태: 로그아웃 버튼 */
+            <button
+              onClick={handleLogout}
+              className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
             >
-              {item.label}
-            </a>
-          ))}
+              <LogOut size={16} className="lg:w-4.5 lg:h-4.5" />
+              로그아웃
+            </button>
+          ) : (
+            /* 비인증 상태: 로그인 + Dev 버튼 */
+            <>
+              <button
+                onClick={openLogin}
+                className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+              >
+                <LogIn size={16} className="lg:w-4.5 lg:h-4.5" />
+                로그인
+              </button>
+
+              <button
+                onClick={openDevLogin}
+                className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+              >
+                <LogIn size={16} className="lg:w-4.5 lg:h-4.5" />
+                Dev
+              </button>
+            </>
+          )}
         </div>
 
-        <div className="hidden md:flex items-center gap-2 lg:gap-4 shrink-0">
-          <button
-            onClick={openLogin}
-            className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
-          >
-            <LogIn size={16} className="lg:w-[18px] lg:h-[18px]" />
-            로그인
-          </button>
-
-          <button
-            onClick={openSignup}
-            className="bg-primary text-on-primary px-4 lg:px-6 py-2 lg:py-2.5 rounded-full font-bold text-[11px] lg:text-sm hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 flex items-center gap-1 lg:gap-2 whitespace-nowrap"
-          >
-            <UserPlus size={16} className="lg:w-[18px] lg:h-[18px]" />
-            무료 시작
-          </button>
-        </div>
-
+        {/* 모바일 햄버거 버튼 */}
         <button
-          className="md:hidden p-2 text-on-surface"
+          className="md:hidden p-2 text-on-surface ml-auto"
           onClick={() => setMobileMenuOpen((prev) => !prev)}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
+      {/* 모바일 메뉴 */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -87,38 +121,54 @@ const Navigation = ({
             className="absolute top-full left-0 w-full bg-white border-t border-surface-container overflow-hidden md:hidden shadow-xl"
           >
             <div className="p-6 flex flex-col gap-4">
-              {NavItem.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className="text-on-surface-variant py-2 font-semibold"
-                  onClick={(e) => scrollToSection(e, item.id)}
-                >
-                  {item.label}
-                </a>
-              ))}
+              {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
+              {isLandingPage &&
+                NavItem.map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="text-on-surface-variant py-2 font-semibold"
+                    onClick={(e) => scrollToSection(e, item.id)}
+                  >
+                    {item.label}
+                  </a>
+                ))}
 
-              <div className="grid grid-cols-2 gap-4 mt-2">
+              {isAuthenticated ? (
+                /* 인증 상태: 로그아웃 버튼 */
                 <button
                   onClick={() => {
-                    openLogin();
+                    handleLogout();
                     setMobileMenuOpen(false);
                   }}
                   className="bg-surface text-on-surface py-3 rounded-xl font-bold"
                 >
-                  로그인
+                  로그아웃
                 </button>
+              ) : (
+                /* 비인증 상태: 로그인 + Dev 버튼 */
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  <button
+                    onClick={() => {
+                      openLogin();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                  >
+                    로그인
+                  </button>
 
-                <button
-                  onClick={() => {
-                    openSignup();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="bg-primary text-on-primary py-3 rounded-xl font-bold"
-                >
-                  시작하기
-                </button>
-              </div>
+                  <button
+                    onClick={() => {
+                      openDevLogin();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                  >
+                    Dev
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}

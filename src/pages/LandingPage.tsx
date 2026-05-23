@@ -8,36 +8,30 @@ import {
   Mail,
   Check,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import Navigation from "../components/common/Navigation";
+import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import FAQItem from "../components/FAQItem";
 import Footer from "../components/common/Footer";
 import { Course, FAQ, Plan, Problems, Review } from "../constants/mockData";
-import AuthModal from "../components/AuthModal";
-
-type AuthModalState = {
-  isOpen: boolean;
-  type: "login" | "signup";
-};
+import type { RootLayoutContext } from "@/layout/RootLayout";
 
 export default function LandingPage() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [authModal, setAuthModal] = useState<AuthModalState>({
-    isOpen: false,
-    type: "login",
-  });
+  const { openSignup } = useOutletContext<RootLayoutContext>();
+
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "monthly",
   );
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const offsetPosition = elementRect - bodyRect - offset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+  };
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -49,47 +43,8 @@ export default function LandingPage() {
     },
   };
 
-  const openLogin = () => setAuthModal({ isOpen: true, type: "login" });
-  const openSignup = () => setAuthModal({ isOpen: true, type: "signup" });
-
-  const scrollToSection = (
-    e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
-    id: string,
-  ) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-      setMobileMenuOpen(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-surface selection:bg-primary/20 font-sans antialiased">
-      <AuthModal
-        isOpen={authModal.isOpen}
-        onClose={() => setAuthModal({ ...authModal, isOpen: false })}
-        type={authModal.type}
-      />
-
-      <Navigation
-        isScrolled={isScrolled}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-        openLogin={openLogin}
-        openSignup={openSignup}
-        scrollToSection={scrollToSection}
-      />
-
       <main>
         {/* Hero Section */}
         <section className="pt-24 pb-16 md:pt-40 md:pb-24 lg:pt-48 lg:pb-32 px-6 lg:px-12 max-w-7xl mx-auto overflow-hidden">
@@ -624,7 +579,7 @@ export default function LandingPage() {
                 무료로 첫 전화 걸어보기
               </button>
               <button
-                onClick={(e) => scrollToSection(e, "요금")}
+                onClick={() => scrollToSection("요금")}
                 className="bg-primary-container text-white px-12 py-6 rounded-2xl font-bold text-xl border-2 border-white/20 hover:bg-white/10 transition-all"
               >
                 요금제 확인하기
