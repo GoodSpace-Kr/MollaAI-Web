@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { LogIn, Menu, UserPlus, X } from "lucide-react";
-import logo from "../src/assest/logo.png";
+import logo from "../../assest/logo.png";
 import { Navigation as NavItem } from "../../constants/mockData";
 
 type NavigationProps = {

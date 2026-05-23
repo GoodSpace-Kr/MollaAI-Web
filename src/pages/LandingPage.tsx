@@ -9,11 +9,11 @@ import {
   Check,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import AuthModal from "src/components/AuthModal";
-import Navigation from "src/components/common/Navigation";
-import { Course, FAQ, Plan, Problems, Review } from "src/constants/mockData";
-import FAQItem from "src/components/FAQItem";
-import Footer from "src/components/common/Footer";
+import Navigation from "../components/common/Navigation";
+import FAQItem from "../components/FAQItem";
+import Footer from "../components/common/Footer";
+import { Course, FAQ, Plan, Problems, Review } from "../constants/mockData";
+import AuthModal from "../components/AuthModal";
 
 type AuthModalState = {
   isOpen: boolean;

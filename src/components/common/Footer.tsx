@@ -1,6 +1,6 @@
 import { Instagram, Twitter, Facebook, Github } from "lucide-react";
-import logo from "../../src/assest/logo.png";
-import { Info } from "src/constants/mockData";
+import logo from "../../assest/logo.png";
+import { Info } from "../../constants/mockData";
 
 const Footer = () => {
   return (
