@@ -27,8 +27,8 @@ const Navigation = ({
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-surface/80 backdrop-blur-md shadow-sm py-2"
-          : "bg-transparent py-4"
+          ? "bg-surface/80 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
@@ -36,7 +36,7 @@ const Navigation = ({
           className="flex items-center cursor-pointer shrink-0"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <img src={logo} alt="Molla AI Logo" className="h-20 lg:h-28 w-auto" />
+          <img src={logo} alt="Molla AI Logo" className="h-20 lg:h-30 w-auto" />
         </div>
 
         <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
