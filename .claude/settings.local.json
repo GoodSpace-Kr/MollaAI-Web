@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell($orig = git show 6393dc5:src/App.jsx | Measure-Object -Line; $new = git show d6c6598:src/App.tsx | Measure-Object -Line; \"Original: $\\($orig.Lines\\) lines\"; \"Refactored: $\\($new.Lines\\) lines\")"
-    ]
-  }
-}
