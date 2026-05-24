@@ -44,7 +44,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface selection:bg-primary/20 font-sans antialiased">
+    <div className="min-h-screen bg-white selection:bg-primary/20 font-sans antialiased">
       <main>
         {/* Hero Section */}
         <section className="pt-24 pb-16 md:pt-40 md:pb-24 lg:pt-48 lg:pb-32 px-6 lg:px-12 max-w-7xl mx-auto overflow-hidden">
