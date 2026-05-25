@@ -30,8 +30,7 @@ const ReportDetailPage = () => {
         <div className="mt-10">
           <LevelAnalysisCard
             percent={5}
-            range="5-10"
-            description={`전체 학습자 중 상위 5%에 해당하는 놀라운 성취입니다. 
+            description={`전체 학습자 중 상위 5%에 해당하는 놀라운 성취입니다.
             고급 어휘 사용 빈도가 비약적으로 상승했습니다.`}
           />
         </div>
