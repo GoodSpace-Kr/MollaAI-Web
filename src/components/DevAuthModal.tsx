@@ -201,7 +201,7 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
                     {isLoading
                       ? "처리 중..."
                       : isSignup
-                        ? "이름 등록하기"
+                        ? "다음 이름등록"
                         : "로그인하기"}
                   </button>
                 </>

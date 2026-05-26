@@ -29,14 +29,14 @@ const ReportListPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] px-6 py-10">
-      <div className="max-w-5xl mx-auto mt-24 flex flex-col gap-8">
+    <div className="min-h-screen bg-[#F8FAFC] px-3 py-10">
+      <div className="max-w-7xl mx-auto mt-25 flex flex-col gap-8">
         <div>
           <h1 className="text-[#0F172B] text-3xl font-bold">리포트 목록</h1>
         </div>
 
         {isLoading && (
-          <div className="rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] px-8 py-10">
+          <div className="text-center rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] px-8 py-10">
             <p className="text-[#64748B] font-medium">
               리포트 목록을 불러오는 중입니다...
             </p>
