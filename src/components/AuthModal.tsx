@@ -4,6 +4,10 @@ import { ChevronLeft, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { registerUser, sendAuthCode, verifyAuthCode } from "@/api/authApi";
 import { useAuthStore } from "@/stores/authStore";
+import StepIndicator from "./StepIndicator";
+
+// [UI_TEST_MODE]
+const UI_TEST_MODE = true;
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -28,6 +32,12 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const [name, setName] = useState("");
   const [timeLeft, setTimeLeft] = useState(CODE_TIME_LIMIT);
 
+  // 토큰 임시 보관
+  const [pendingTokens, setPendingTokens] = useState<{
+    accessToken: string;
+    refreshToken: string;
+  } | null>(null);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,6 +57,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
       setName("");
       setErrorMessage("");
       setTimeLeft(CODE_TIME_LIMIT);
+      setPendingTokens(null);
     }
   }, [isOpen, type]);
 
@@ -70,6 +81,12 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const handleSendCode = async () => {
     if (!phone.trim()) return;
 
+    // [UI_TEST_MODE]
+    if (UI_TEST_MODE) {
+      resetCodeStep();
+      return;
+    }
+
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -89,6 +106,17 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const handleVerifyCode = async () => {
     if (!code.trim() || isCodeExpired) return;
 
+    // [UI_TEST_MODE]
+    if (UI_TEST_MODE) {
+      if (isSignup) {
+        setStep("name");
+      } else {
+        onClose();
+        navigate("/reports");
+      }
+      return;
+    }
+
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -98,16 +126,20 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         code,
       });
 
-      setTokens({
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-      });
-
       if (result.isNewUser) {
+        // 토큰 임시 보관
+        setPendingTokens({
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        });
         setStep("name");
         return;
       }
 
+      setTokens({
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
       onClose();
       navigate("/reports");
     } catch (error) {
@@ -120,6 +152,15 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const handleSignupComplete = async () => {
     if (!name.trim()) return;
 
+    // [UI_TEST_MODE]
+    if (UI_TEST_MODE) {
+      onClose();
+      navigate("/reports");
+      return;
+    }
+
+    if (!pendingTokens) return;
+
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -128,6 +169,8 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         username: name,
       });
 
+      // 이름 등록 성공 후 토큰 저장
+      setTokens(pendingTokens);
       setUser(user);
 
       onClose();
@@ -207,29 +250,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
               </button>
             </div>
 
-            <div className="mb-8">
-              <div className="flex items-center justify-center gap-2">
-                <div
-                  className={`h-2 w-2 rounded-full ${
-                    step === "phone" ? "bg-primary" : "bg-surface-container"
-                  }`}
-                />
-                <div
-                  className={`h-2 w-2 rounded-full ${
-                    step === "code" ? "bg-primary" : "bg-surface-container"
-                  }`}
-                />
-                {isSignup && (
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      step === "name" ? "bg-primary" : "bg-surface-container"
-                    }`}
-                  />
-                )}
-              </div>
-            </div>
-
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="" onSubmit={(e) => e.preventDefault()}>
               {step === "phone" && (
                 <>
                   <div>
@@ -245,9 +266,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     />
                   </div>
 
-                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
+                  <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
                     입력한 전화번호로 인증번호가 전송됩니다.
                   </p>
+
+                  <div className="pt-2 pb-3">
+                    <StepIndicator step={step} isSignup={isSignup} />
+                  </div>
 
                   <button
                     type="button"
@@ -297,9 +322,9 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     )}
                   </div>
 
-                  <div className="flex justify-between items-center px-1">
+                  <div className="flex justify-between items-center pl-2 pr-4 mt-2">
                     <p className="text-xs text-on-surface-variant">
-                      {phone}로 전송된 인증번호를 입력하세요.
+                      전송된 인증번호를 입력하세요.
                     </p>
 
                     <button
@@ -310,6 +335,10 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     >
                       재전송
                     </button>
+                  </div>
+
+                  <div className="pt-2 pb-3">
+                    <StepIndicator step={step} isSignup={isSignup} />
                   </div>
 
                   <button
@@ -338,9 +367,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     />
                   </div>
 
-                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
+                  <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
                     서비스에서 사용할 이름을 입력하면 회원가입이 완료됩니다.
                   </p>
+
+                  <div className="pt-2 pb-3">
+                    <StepIndicator step={step} isSignup={isSignup} />
+                  </div>
 
                   <button
                     type="button"

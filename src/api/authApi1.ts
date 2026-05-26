@@ -1,3 +1,5 @@
+// 개발용 (추후 삭제)
+
 import { publicAxios } from "@/api/axiosInstance";
 
 export type DevLoginRequest = {

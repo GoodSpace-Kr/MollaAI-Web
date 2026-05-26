@@ -1,17 +1,12 @@
-import RankBadges, { RankRange } from "./RankBadges";
-import TopRankBadge, { TopRankPercent } from "./TopRankBadge";
+import RankBadges from "./RankBadges";
+import TopRankBadge from "./TopRankBadge";
 
 type LevelAnalysisCardProps = {
   description: string;
-  percent: TopRankPercent;
-  range: RankRange;
+  percent: number;
 };
 
-const LevelAnalysisCard = ({
-  description,
-  percent,
-  range,
-}: LevelAnalysisCardProps) => {
+const LevelAnalysisCard = ({ description, percent }: LevelAnalysisCardProps) => {
   return (
     <section className="rounded-[28px] bg-white px-10 md:px-16 py-10 shadow-[0_4px_12px_rgba(15,23,42,0.08)] border border-[#f1f3f5]">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
@@ -26,7 +21,7 @@ const LevelAnalysisCard = ({
             </p>
           </div>
 
-          <RankBadges range={range} />
+          <RankBadges percent={percent} />
         </div>
 
         <div className="shrink-0">

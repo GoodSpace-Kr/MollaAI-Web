@@ -1,48 +1,25 @@
 import RankRing from "@/assest/rank-ring.svg?react";
 
-export type TopRankPercent = 5 | 10 | 20 | 30 | 40 | 50 | 60 | 70;
-
 type TopRankBadgeProps = {
-  percent: TopRankPercent;
+  percent: number;
 };
 
-const RANK_STYLE = {
-  5: {
-    color: "#EC003F",
-    label: "Exceptional Performance",
-  },
-  10: {
-    color: "#37D45E",
-    label: "Exceptional Performance",
-  },
-  20: {
-    color: "#35D4CC",
-    label: "Top Performer",
-  },
-  30: {
-    color: "#35D4CC",
-    label: "Excellent Progress",
-  },
-  40: {
-    color: "#3C64E8",
-    label: "Strong Achiever",
-  },
-  50: {
-    color: "#3C64E8",
-    label: "Above Average",
-  },
-  60: {
-    color: "#3A3939",
-    label: "Growing Potential",
-  },
-  70: {
-    color: "#3A3939",
-    label: "Growing Potential",
-  },
-} as const;
+const getRankStyle = (percent: number) => {
+  if (percent <= 9) {
+    return { color: "#EC003F", label: "Exceptional Performance" };
+  } else if (percent <= 19) {
+    return { color: "#37D45E", label: "Excellent Progress" };
+  } else if (percent <= 39) {
+    return { color: "#35D4CC", label: "Top Performer" };
+  } else if (percent <= 59) {
+    return { color: "#3C64E8", label: "Strong Achiever" };
+  } else {
+    return { color: "#3A3939", label: "Growing Potential" };
+  }
+};
 
 const TopRankBadge = ({ percent }: TopRankBadgeProps) => {
-  const rank = RANK_STYLE[percent];
+  const rank = getRankStyle(percent);
 
   return (
     <div className="relative w-[224px] h-[224px] flex items-center justify-center">

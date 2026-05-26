@@ -11,7 +11,6 @@ type ReportHeroCardProps = {
 };
 
 const ReportHeroCard = ({
-  badge = "Daily Analysis",
   subTitle = "오늘의 주요 학습",
   title,
   date,
@@ -42,7 +41,9 @@ const ReportHeroCard = ({
       />
 
       <div className="backd60rop-blur-[6px] bg-white/20 px-3.5 py-1 rounded-full shrink-0">
-        <span className="text-white text-[14px] tracking-wide">{badge}</span>
+        <span className="text-white text-[14px] tracking-wide">
+          Daily Analysis
+        </span>
       </div>
 
       <div className="flex flex-col pt-2 w-full">

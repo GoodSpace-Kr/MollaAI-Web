@@ -44,13 +44,13 @@ const Navigation = ({
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+      <div className="relative max-w-7xl mx-auto h-[90px] px-6 lg:px-12 flex items-center justify-center">
         {/* 로고 */}
         <div
-          className="flex items-center cursor-pointer shrink-0"
+          className="absolute left-6 lg:left-12 flex items-center cursor-pointer shrink-0"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <img src={logo} alt="Molla AI Logo" className="h-20 lg:h-30 w-auto" />
+          <img src={logo} alt="Molla AI Logo" className="h-10 w-auto" />
         </div>
 
         {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
@@ -70,7 +70,7 @@ const Navigation = ({
         )}
 
         {/* 데스크톱 버튼 영역 */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-4 shrink-0 ml-auto">
+        <div className="hidden md:flex absolute right-6 lg:right-12 items-center gap-2 lg:gap-4 shrink-0">
           {isAuthenticated ? (
             /* 인증 상태: 로그아웃 버튼 */
             <button

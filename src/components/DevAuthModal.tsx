@@ -1,3 +1,5 @@
+// 개발용 인증창 (추후 삭제)
+
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, X } from "lucide-react";
@@ -6,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { devLogin } from "@/api/authApi1";
 import { registerUser } from "@/api/authApi";
 import { useAuthStore } from "@/stores/authStore";
+import DevStepIndicator from "./DevStepIndicator";
 
 type DevAuthModalProps = {
   isOpen: boolean;
@@ -25,6 +28,13 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
 
+  // 신규 회원의 경우 이름 등록 완료 전까지 토큰을 임시 보관
+  // (바로 setTokens하면 isAuthenticated=true → PublicRoute가 /reports로 리다이렉트)
+  const [pendingTokens, setPendingTokens] = useState<{
+    accessToken: string;
+    refreshToken: string;
+  } | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -37,6 +47,7 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
       setPhone("");
       setName("");
       setErrorMessage("");
+      setPendingTokens(null);
     }
   }, [isOpen, type]);
 
@@ -51,16 +62,21 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
         phoneNumber: phone,
       });
 
-      setTokens({
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-      });
-
       if (isSignup) {
+        // 신규 회원: 이름 등록 완료 전까지 토큰을 임시 보관
+        // (setTokens를 여기서 호출하면 isAuthenticated=true → PublicRoute가 바로 리다이렉트)
+        setPendingTokens({
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        });
         setStep("name");
         return;
       }
 
+      setTokens({
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
       onClose();
       navigate("/reports");
     } catch {
@@ -71,7 +87,7 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
   };
 
   const handleRegisterName = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || !pendingTokens) return;
 
     try {
       setIsLoading(true);
@@ -81,6 +97,8 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
         username: name,
       });
 
+      // 이름 등록 성공 후 토큰 저장 → isAuthenticated=true (이 시점에 인증 완료)
+      setTokens(pendingTokens);
       setUser(user);
 
       onClose();
@@ -150,24 +168,7 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
               </button>
             </div>
 
-            <div className="mb-8">
-              <div className="flex items-center justify-center gap-2">
-                <div
-                  className={`h-2 w-2 rounded-full ${
-                    step === "phone" ? "bg-primary" : "bg-surface-container"
-                  }`}
-                />
-                {isSignup && (
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      step === "name" ? "bg-primary" : "bg-surface-container"
-                    }`}
-                  />
-                )}
-              </div>
-            </div>
-
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="" onSubmit={(e) => e.preventDefault()}>
               {step === "phone" && (
                 <>
                   <div>
@@ -183,9 +184,13 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
                     />
                   </div>
 
-                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
+                  <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
                     SMS 인증 없이 전화번호만으로 토큰을 발급합니다.
                   </p>
+
+                  <div className="pt-2 pb-3">
+                    <DevStepIndicator step={step} isSignup={isSignup} />
+                  </div>
 
                   <button
                     type="button"
@@ -217,10 +222,14 @@ const DevAuthModal = ({ isOpen, onClose, type }: DevAuthModalProps) => {
                     />
                   </div>
 
-                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
+                  <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
                     토큰 발급이 완료되었습니다. 이름을 등록하면 가입이
                     완료됩니다.
                   </p>
+
+                  <div className="pt-2 pb-3">
+                    <DevStepIndicator step={step} isSignup={isSignup} />
+                  </div>
 
                   <button
                     type="button"
