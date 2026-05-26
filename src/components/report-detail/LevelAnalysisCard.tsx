@@ -6,12 +6,15 @@ type LevelAnalysisCardProps = {
   percent: number;
 };
 
-const LevelAnalysisCard = ({ description, percent }: LevelAnalysisCardProps) => {
+const LevelAnalysisCard = ({
+  description,
+  percent,
+}: LevelAnalysisCardProps) => {
   return (
     <section className="rounded-[28px] bg-white px-10 md:px-16 py-10 shadow-[0_4px_12px_rgba(15,23,42,0.08)] border border-[#f1f3f5]">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
-        <div className="w-full flex flex-col gap-8">
-          <div className="flex flex-col gap-5">
+        <div className="w-full flex flex-col gap-15">
+          <div className="flex flex-col gap-3">
             <h2 className="text-[#3b3b3d] text-[24px] font-bold tracking-[-0.02em]">
               Comprehensive Level Analysis
             </h2>

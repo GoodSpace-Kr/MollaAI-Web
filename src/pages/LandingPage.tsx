@@ -8,7 +8,6 @@ import {
   Mail,
   Check,
 } from "lucide-react";
-import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import FAQItem from "../components/FAQItem";
 import Footer from "../components/common/Footer";
@@ -18,9 +17,9 @@ import type { RootLayoutContext } from "@/layout/RootLayout";
 export default function LandingPage() {
   const { openSignup } = useOutletContext<RootLayoutContext>();
 
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
-    "monthly",
-  );
+  // const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
+  //   "monthly",
+  // );
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -84,11 +83,8 @@ export default function LandingPage() {
                     size={20}
                   />
                 </button>
-                <button className="bg-secondary-container text-primary px-8 py-5 rounded-2xl font-bold text-lg hover:bg-secondary-container/80 transition-all flex items-center justify-center">
-                  서비스 둘러보기
-                </button>
               </div>
-              <div className="flex items-center gap-4 text-xs md:text-sm text-on-surface-variant font-medium justify-center lg:justify-start">
+              {/* <div className="flex items-center gap-4 text-xs md:text-sm text-on-surface-variant font-medium justify-center lg:justify-start">
                 <div className="flex -space-x-2">
                   {[1, 2, 3, 4].map((i) => (
                     <div
@@ -98,7 +94,7 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <span>현재 12,430명이 함께 공부하고 있어요</span>
-              </div>
+              </div> */}
             </motion.div>
 
             <motion.div
@@ -162,9 +158,9 @@ export default function LandingPage() {
               {...fadeIn}
               className="text-center space-y-4 mb-16 md:mb-24"
             >
-              <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+              <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                 The Challenge
-              </span>
+              </div>
               <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
                 왜 우리는 영어 앞에서 작아질까요?
               </h2>
@@ -205,9 +201,9 @@ export default function LandingPage() {
             {...fadeIn}
             className="text-center space-y-4 mb-20 md:mb-32"
           >
-            <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+            <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
               Curriculum
-            </span>
+            </div>
             <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
               당신에게 필요한 모든 상황
             </h2>
@@ -240,14 +236,14 @@ export default function LandingPage() {
         >
           <div className="max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center space-y-6 mb-16">
-              <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+              <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                 Pricing Plans
-              </span>
+              </div>
               <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
                 합리적인 비용으로 시작하세요
               </h2>
 
-              <div className="flex items-center justify-center gap-4 pt-4">
+              {/* <div className="flex items-center justify-center gap-4 pt-4">
                 <span
                   className={`text-sm font-bold ${billingCycle === "monthly" ? "text-primary" : "text-on-surface-variant"}`}
                 >
@@ -274,10 +270,10 @@ export default function LandingPage() {
                     20% 할인
                   </span>
                 </span>
-              </div>
+              </div> */}
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid md:grid-cols-2 gap-10 mx-30">
               {Plan.map((plan, i) => (
                 <motion.div
                   key={i}
@@ -296,7 +292,7 @@ export default function LandingPage() {
                       {plan.desc}
                     </p>
                   </div>
-                  <div className="flex items-baseline gap-1">
+                  {/* <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold">
                       ₩
                       {billingCycle === "monthly"
@@ -306,12 +302,30 @@ export default function LandingPage() {
                     <span className="text-on-surface-variant font-medium">
                       /월
                     </span>
-                  </div>
-                  <button
-                    className={`w-full py-4 rounded-2xl font-bold transition-all ${plan.popular ? "bg-primary text-on-primary shadow-lg shadow-primary/20 hover:scale-[1.02]" : "bg-surface text-on-surface hover:bg-surface-container"}`}
-                  >
-                    요금제 선택하기
-                  </button>
+                  </div> */}
+                  {plan.showButton && (
+                    <button
+                      type="button"
+                      disabled={plan.disabled}
+                      onClick={() => {
+                        if (!plan.disabled) {
+                          openSignup();
+                        }
+                      }}
+                      className={`
+                        w-full py-4 rounded-2xl font-bold transition-all
+                        ${
+                          plan.disabled
+                            ? "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
+                            : plan.popular
+                              ? "bg-primary text-on-primary shadow-lg shadow-primary/20 hover:scale-[1.02]"
+                              : "bg-surface text-on-surface hover:bg-surface-container"
+                        }
+                      `}
+                    >
+                      {plan.buttonText}
+                    </button>
+                  )}
                   <ul className="space-y-4 pt-4">
                     {plan.features.map((feature, idx) => (
                       <li
@@ -340,9 +354,9 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16 md:mb-24">
               <motion.div {...fadeIn} className="space-y-4">
-                <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+                <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                   Testimonials
-                </span>
+                </div>
                 <h2 className="text-3xl md:text-5xl font-bold text-white">
                   이미 많은 분들이 <br className="hidden lg:block" />
                   변화를 경험했습니다.
@@ -407,9 +421,9 @@ export default function LandingPage() {
           className="py-24 md:py-32 px-6 md:px-12 max-w-4xl mx-auto"
         >
           <motion.div {...fadeIn} className="text-center space-y-4 mb-16">
-            <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+            <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
               Support
-            </span>
+            </div>
             <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
               자주 묻는 질문
             </h2>
@@ -436,10 +450,10 @@ export default function LandingPage() {
         >
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              <motion.div {...fadeIn} className="space-y-6 md:space-y-8">
-                <span className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
+              <motion.div {...fadeIn} className="space-y-6">
+                <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                   Visit Us
-                </span>
+                </div>
                 <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
                   찾아오시는 길
                 </h2>
@@ -589,7 +603,6 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -29,16 +29,16 @@ const CoreSentenceFeedback = ({ items }: CoreSentenceFeedbackProps) => {
         <table className="w-full min-w-[900px] border-collapse">
           <thead>
             <tr className="bg-[#F8FAFC] border-y border-[#EEF2F7]">
-              <th className="w-[90px] px-8 py-5 text-left text-[12px] font-bold tracking-[0.18em] text-[#9AA7BD]">
+              <th className="w-[90px] px-8 py-5 text-left text-[12px] font-bold tracking-[0.08em] text-[#9AA7BD]">
                 NO
               </th>
-              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.18em] text-[#9AA7BD]">
+              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.08em] text-[#9AA7BD]">
                 ORIGINAL SENTENCE
               </th>
-              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.18em] text-[#9AA7BD]">
+              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.08em] text-[#9AA7BD]">
                 IMPROVED SENTENCE
               </th>
-              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.18em] text-[#9AA7BD]">
+              <th className="px-6 py-5 text-left text-[12px] font-bold tracking-[0.08em] text-[#9AA7BD]">
                 KEY EXPRESSION
               </th>
             </tr>

@@ -17,11 +17,14 @@ type CourseItem = {
 
 type PlanItem = {
   name: string;
-  monthlyPrice: string;
+  monthlyPrice?: string;
   yearlyPrice: string;
   desc: string;
   features: string[];
+  buttonText: string;
   popular: boolean;
+  disabled?: boolean;
+  showButton?: boolean;
 };
 
 type ReviewItem = {
@@ -117,45 +120,36 @@ export const Course: CourseItem[] = [
 
 export const Plan: PlanItem[] = [
   {
-    name: "스타터",
-    monthlyPrice: "29,000",
-    yearlyPrice: "23,200",
+    name: "비기너",
+    monthlyPrice: "0",
+    yearlyPrice: "0",
     desc: "가볍게 시작하고 싶은 입문자용",
     features: [
-      "월 30분 통화",
+      "하루 10분 통화",
       "기본 AI 튜터 제공",
       "학습 리포트 제공",
       "메신저 알림",
     ],
+    buttonText: "시작하기",
     popular: false,
+    showButton: false,
   },
   {
-    name: "프로",
+    name: "프리미엄",
     monthlyPrice: "59,000",
     yearlyPrice: "47,200",
-    desc: "가장 많은 분들이 선택하는 요금제",
+    desc: "* 데모버전 기간동안 자동적용 됩니다.",
     features: [
-      "월 100분 통화",
+      "하루 300분 통화",
       "프리미엄 AI 튜터 제공",
       "상세 문법 교정 리포트",
       "맞춤형 학습 커리큘럼",
       "우선 고객 지원",
     ],
-    popular: true,
-  },
-  {
-    name: "비즈니스",
-    monthlyPrice: "99,000",
-    yearlyPrice: "79,200",
-    desc: "확실한 실력 향상을 원하는 실전파",
-    features: [
-      "무제한 통화",
-      "모든 AI 튜터 모델 사용",
-      "실시간 발음 코칭",
-      "비즈니스 전문 과정 포함",
-      "1:1 전담 매니저 상담",
-    ],
+    buttonText: "시작하기",
     popular: false,
+    disabled: false,
+    showButton: true,
   },
 ];
 

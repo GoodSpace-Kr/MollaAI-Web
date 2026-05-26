@@ -72,8 +72,8 @@ const ReportDetailPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white px-3 py-10">
-        <div className="max-w-7xl mx-auto mt-35">
-          <p className="text-[#64748B] font-medium">
+        <div className="max-w-7xl mx-auto mt-35 text-center mt-80">
+          <p className="text-[#64748B] text-xl font-medium">
             리포트를 불러오는 중입니다...
           </p>
         </div>
@@ -84,8 +84,8 @@ const ReportDetailPage = () => {
   if (errorMessage || !report) {
     return (
       <div className="min-h-screen bg-white px-3 py-10">
-        <div className="max-w-7xl mx-auto mt-35">
-          <p className="text-[#E63355] font-bold">
+        <div className="max-w-7xl mx-auto mt-35 text-center mt-80">
+          <p className="text-[#E63355] text-xl font-bold">
             {errorMessage || "리포트가 존재하지 않습니다."}
           </p>
         </div>
