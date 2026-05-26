@@ -1,11 +1,12 @@
 import { getReports, type ReportSummary } from "@/api/reportApi";
+import { getMySubscription, MySubscription } from "@/api/subscriptionApi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// const PLAN_LABEL = {
-//   beginner: "비기너",
-//   premium: "프리미엄",
-// } as const;
+const PLAN_LABEL = {
+  beginner: "비기너",
+  premium: "프리미엄",
+} as const;
 
 const ReportListPage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const ReportListPage = () => {
   const [reports, setReports] = useState<ReportSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  // const [subscription, setSubscription] = useState<MySubscription | null>(null);
+  const [subscription, setSubscription] = useState<MySubscription | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,17 +22,13 @@ const ReportListPage = () => {
         setIsLoading(true);
         setErrorMessage("");
 
-        const data = await getReports();
+        const [reportsData, subscriptionData] = await Promise.all([
+          getReports(),
+          getMySubscription(),
+        ]);
 
-        // const [reportsData, subscriptionData] = await Promise.all([
-        //   getReports(),
-        //   getMySubscription(),
-        // ]);
-
-        // setReports(reportsData);
-        // setSubscription(subscriptionData);
-
-        setReports(data);
+        setReports(reportsData);
+        setSubscription(subscriptionData);
       } catch {
         setErrorMessage("정보를 불러오지 못했습니다.");
       } finally {
@@ -43,12 +40,12 @@ const ReportListPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] px-3 py-10">
+    <div className="min-h-screen bg-[rgb(248,250,252)] px-3 py-10">
       <div className="max-w-7xl mx-auto mt-25 flex flex-col gap-8">
-        {/* {!isLoading && subscription && (
-          <section className="rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] px-8 py-7">
+        {!isLoading && subscription && (
+          <section className="rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] px-8 py-7 mb-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="rounded-[20px] bg-[#F2F4FF] border border-[#DDE3FF] px-6 py-5">
+              <div className="rounded-[20px] bg-white border border-[#EEF2F7] px-6 py-5">
                 <p className="text-[#64748B] text-sm font-bold">구독 정보</p>
                 <p className="mt-2 text-[#0F172B] text-2xl font-black">
                   {PLAN_LABEL[subscription.planType]}
@@ -74,7 +71,7 @@ const ReportListPage = () => {
               </div>
             </div>
           </section>
-        )} */}
+        )}
 
         <div>
           <h1 className="text-[#0F172B] text-3xl font-bold">리포트 목록</h1>

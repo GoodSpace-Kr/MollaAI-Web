@@ -23,7 +23,7 @@ const ScorePredictionCard = ({
         <img
           src={logoSrc}
           alt={logoAlt}
-          className="h-8 w-auto object-contain"
+          className="h-7 w-auto object-contain"
         />
       </div>
 

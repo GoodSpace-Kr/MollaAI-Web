@@ -10,7 +10,7 @@ export type MySubscription = {
   dailyLimitMinutes: number;
   remainingMinutesToday: number;
   startedAt: string;
-  expiresAt: string;
+  expiresAt: string | null;
   status: SubscriptionStatus;
 };
 
