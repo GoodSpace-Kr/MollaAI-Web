@@ -8,7 +8,6 @@ import {
   Mail,
   Check,
 } from "lucide-react";
-import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import FAQItem from "../components/FAQItem";
 import Footer from "../components/common/Footer";
@@ -18,9 +17,9 @@ import type { RootLayoutContext } from "@/layout/RootLayout";
 export default function LandingPage() {
   const { openSignup } = useOutletContext<RootLayoutContext>();
 
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
-    "monthly",
-  );
+  // const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
+  //   "monthly",
+  // );
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -293,7 +292,7 @@ export default function LandingPage() {
                       {plan.desc}
                     </p>
                   </div>
-                  <div className="flex items-baseline gap-1">
+                  {/* <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold">
                       ₩
                       {billingCycle === "monthly"
@@ -303,28 +302,30 @@ export default function LandingPage() {
                     <span className="text-on-surface-variant font-medium">
                       /월
                     </span>
-                  </div>
-                  <button
-                    type="button"
-                    disabled={plan.disabled}
-                    onClick={() => {
-                      if (!plan.disabled) {
-                        openSignup();
-                      }
-                    }}
-                    className={`
-                      w-full py-4 rounded-2xl font-bold transition-all
-                      ${
-                        plan.disabled
-                          ? "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
-                          : plan.popular
-                            ? "bg-primary text-on-primary shadow-lg shadow-primary/20 hover:scale-[1.02]"
-                            : "bg-surface text-on-surface hover:bg-surface-container"
-                      }
-                    `}
-                  >
-                    {plan.buttonText}
-                  </button>
+                  </div> */}
+                  {plan.showButton && (
+                    <button
+                      type="button"
+                      disabled={plan.disabled}
+                      onClick={() => {
+                        if (!plan.disabled) {
+                          openSignup();
+                        }
+                      }}
+                      className={`
+                        w-full py-4 rounded-2xl font-bold transition-all
+                        ${
+                          plan.disabled
+                            ? "bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed"
+                            : plan.popular
+                              ? "bg-primary text-on-primary shadow-lg shadow-primary/20 hover:scale-[1.02]"
+                              : "bg-surface text-on-surface hover:bg-surface-container"
+                        }
+                      `}
+                    >
+                      {plan.buttonText}
+                    </button>
+                  )}
                   <ul className="space-y-4 pt-4">
                     {plan.features.map((feature, idx) => (
                       <li
@@ -602,7 +603,6 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

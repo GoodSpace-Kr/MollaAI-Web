@@ -17,13 +17,14 @@ type CourseItem = {
 
 type PlanItem = {
   name: string;
-  monthlyPrice: string;
+  monthlyPrice?: string;
   yearlyPrice: string;
   desc: string;
   features: string[];
   buttonText: string;
   popular: boolean;
   disabled?: boolean;
+  showButton?: boolean;
 };
 
 type ReviewItem = {
@@ -124,29 +125,31 @@ export const Plan: PlanItem[] = [
     yearlyPrice: "0",
     desc: "가볍게 시작하고 싶은 입문자용",
     features: [
-      "하루 30분 통화",
+      "하루 10분 통화",
       "기본 AI 튜터 제공",
       "학습 리포트 제공",
       "메신저 알림",
     ],
     buttonText: "시작하기",
     popular: false,
+    showButton: false,
   },
   {
     name: "프리미엄",
     monthlyPrice: "59,000",
     yearlyPrice: "47,200",
-    desc: "가장 많은 분들이 선택하는 요금제",
+    desc: "* 데모버전 기간동안 자동적용 됩니다.",
     features: [
-      "하루 100분 통화",
+      "하루 300분 통화",
       "프리미엄 AI 튜터 제공",
       "상세 문법 교정 리포트",
       "맞춤형 학습 커리큘럼",
       "우선 고객 지원",
     ],
-    buttonText: "6.12 정식 출시부터 가능",
+    buttonText: "시작하기",
     popular: false,
-    disabled: true,
+    disabled: false,
+    showButton: true,
   },
 ];
 
