@@ -14,6 +14,7 @@ export type ReportSummary = {
   levelPercentage: number;
   levelAnalysis: string;
   levelResult: string | null;
+  sessionDurationMinutes: number;
   createdAt: string;
 };
 

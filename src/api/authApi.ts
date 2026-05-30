@@ -16,10 +16,17 @@ export type VerifyCodeRequest = {
   code: string;
 };
 
-export type VerifyCodeResponse = {
+export type VerifyCode = {
   accessToken: string;
   refreshToken: string;
   isNewUser: boolean;
+};
+
+export type VerifyCodeResponse = {
+  code: string;
+  message: string;
+  data: VerifyCode;
+  timestamp: string;
 };
 
 export type RegisterRequest = {
@@ -50,13 +57,13 @@ export const sendAuthCode = async (
 
 export const verifyAuthCode = async (
   data: VerifyCodeRequest,
-): Promise<VerifyCodeResponse> => {
+): Promise<VerifyCode> => {
   const response = await publicAxios.post<VerifyCodeResponse>(
     "/api/v1/auth/verify-code",
     data,
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const registerUser = async (
