@@ -1,9 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  
+  --font-sans:
+    "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+
   /* Brand Colors from Design Spec */
   --color-surface: #f7f9fb;
   --color-surface-dim: #d8dadc;
@@ -12,46 +16,54 @@
   --color-surface-container: #eceef0;
   --color-on-surface: #191c1e;
   --color-on-surface-variant: #434654;
-  
+
   --color-primary: #1a53c8;
   --color-on-primary: #ffffff;
   --color-primary-container: #3e6ee3;
-  
+
   --color-secondary: #515f78;
   --color-secondary-container: #d1e0fe;
-  
+
   --color-tertiary: #914805;
   --color-tertiary-container: #b06020;
   --color-error: #ba1a1a;
-  
+
   --color-secondary-fixed: #d5e3ff;
   --color-secondary-fixed-dim: #b8c7e4;
-  
+
   /* Typography presets */
   --font-display: "Pretendard Variable", sans-serif;
-  
+
   /* Radii */
   --radius-sm: 0.25rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+
+  --shadow-card:
+    0px 1px 2px -1px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.1);
+
+  --transition-button: transition-all duration-200 ease-out
+    hover: -translate-y-[2px]
+    hover: shadow-[0_8px_20px_rgba(255, 255, 255, 0.25)] hover: bg-[#F8FAFF]
+    active: translate-y-0 active: scale-[0.98];
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply bg-surface text-on-surface font-sans;
   }
-  
+
   h1 {
     @apply font-bold tracking-tight text-on-surface;
     font-size: clamp(2.25rem, 5vw, 4rem);
     line-height: 1.1;
   }
-  
+
   h2 {
     @apply font-semibold tracking-tight text-on-surface;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -73,4 +85,23 @@
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* tailwind v4 버전부터 가능 */
+/* 버튼 효과 */
+@layer components {
+  .btn-hover-effect {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .btn-hover-effect:hover {
+    transform: translateY(-2px);
+    /* background-color: #f8faff; */
+    /* box-shadow: 0 8px 10px rgba(255, 255, 255, 0.15); */
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  }
+
+  .btn-hover-effect:active {
+    transform: translateY(0) scale(0.98);
+  }
 }

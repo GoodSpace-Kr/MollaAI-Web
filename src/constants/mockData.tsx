@@ -149,7 +149,7 @@ export const Plan: PlanItem[] = [
     buttonText: "시작하기",
     popular: false,
     disabled: false,
-    showButton: true,
+    showButton: false,
   },
 ];
 
@@ -217,3 +217,62 @@ export const FAQ: FAQ[] = [
       "요금제에 따라 다르지만, 기본적으로 24시간 언제든 원하실 때 이용 가능합니다. 예약할 필요 없이 당신이 여유 있는 시간이 바로 학습 시간이 됩니다.",
   },
 ];
+
+export const reports1 = [
+  {
+    id: 1,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 3,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 2,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 5,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 3,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 6,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 4,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 6,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 5,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 6,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 6,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 6,
+    createdAt: "2026.05.22",
+  },
+  {
+    id: 7,
+    oneLineSummary:
+      "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    levelAnalysis: "지금 바로 무료 체험을 시작하고 영어 공포증에서 탈출하세요.",
+    sessionDurationMinute: 6,
+    createdAt: "2026.05.22",
+  },
+] as const;

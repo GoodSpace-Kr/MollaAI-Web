@@ -59,7 +59,7 @@ export default function LandingPage() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                24시간 언제 어디서나 AI와 함께
+                24시간 언제 어디서나 Molla와 함께
               </div>
               <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold text-on-surface leading-[1.05] tracking-tight">
                 영어 공포증,
@@ -69,7 +69,7 @@ export default function LandingPage() {
               </h1>
               <p className="text-base md:text-lg lg:text-xl text-on-surface-variant max-w-lg leading-relaxed mx-auto lg:mx-0">
                 평가받지 않는 안전한 공간. AI 원어민과 실시간으로 대화하며
-                자연스럽게 입을 열어보세요. 당신의 속도와 관심사에 100%
+                자연스럽게 입을 열어보세요. 고객님의 속도와 관심사에 100%
                 맞춰줍니다.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">

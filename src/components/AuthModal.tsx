@@ -6,9 +6,6 @@ import { registerUser, sendAuthCode, verifyAuthCode } from "@/api/authApi";
 import { useAuthStore } from "@/stores/authStore";
 import StepIndicator from "./StepIndicator";
 
-// [UI_TEST_MODE]
-const UI_TEST_MODE = true;
-
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -32,7 +29,8 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const [name, setName] = useState("");
   const [timeLeft, setTimeLeft] = useState(CODE_TIME_LIMIT);
 
-  // 토큰 임시 보관
+  // 신규 회원의 경우 이름 등록 완료 전까지 토큰을 임시 보관
+  // (바로 setTokens하면 isAuthenticated=true → PublicRoute가 /reports로 리다이렉트)
   const [pendingTokens, setPendingTokens] = useState<{
     accessToken: string;
     refreshToken: string;
@@ -81,12 +79,6 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const handleSendCode = async () => {
     if (!phone.trim()) return;
 
-    // [UI_TEST_MODE]
-    if (UI_TEST_MODE) {
-      resetCodeStep();
-      return;
-    }
-
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -106,17 +98,6 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   const handleVerifyCode = async () => {
     if (!code.trim() || isCodeExpired) return;
 
-    // [UI_TEST_MODE]
-    if (UI_TEST_MODE) {
-      if (isSignup) {
-        setStep("name");
-      } else {
-        onClose();
-        navigate("/reports");
-      }
-      return;
-    }
-
     try {
       setIsLoading(true);
       setErrorMessage("");
@@ -127,7 +108,8 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
       });
 
       if (result.isNewUser) {
-        // 토큰 임시 보관
+        // 신규 회원: 이름 등록 완료 전까지 토큰을 임시 보관
+        // (setTokens를 여기서 호출하면 isAuthenticated=true → PublicRoute가 바로 리다이렉트)
         setPendingTokens({
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
@@ -150,16 +132,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
   };
 
   const handleSignupComplete = async () => {
-    if (!name.trim()) return;
-
-    // [UI_TEST_MODE]
-    if (UI_TEST_MODE) {
-      onClose();
-      navigate("/reports");
-      return;
-    }
-
-    if (!pendingTokens) return;
+    if (!name.trim() || !pendingTokens) return;
 
     try {
       setIsLoading(true);
@@ -169,7 +142,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         username: name,
       });
 
-      // 이름 등록 성공 후 토큰 저장
+      // 이름 등록 성공 후 토큰 저장 → isAuthenticated=true (이 시점에 인증 완료)
       setTokens(pendingTokens);
       setUser(user);
 
@@ -322,9 +295,9 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     )}
                   </div>
 
-                  <div className="flex justify-between items-center pl-2 pr-4 mt-2">
+                  <div className="flex justify-between items-center px-1">
                     <p className="text-xs text-on-surface-variant">
-                      전송된 인증번호를 입력하세요.
+                      {phone}로 전송된 인증번호를 입력하세요.
                     </p>
 
                     <button
@@ -337,9 +310,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     </button>
                   </div>
 
-                  <div className="pt-2 pb-3">
-                    <StepIndicator step={step} isSignup={isSignup} />
-                  </div>
+                  <StepIndicator step={step} isSignup={isSignup} />
 
                   <button
                     type="button"
@@ -367,13 +338,11 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                     />
                   </div>
 
-                  <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
+                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
                     서비스에서 사용할 이름을 입력하면 회원가입이 완료됩니다.
                   </p>
 
-                  <div className="pt-2 pb-3">
-                    <StepIndicator step={step} isSignup={isSignup} />
-                  </div>
+                  <StepIndicator step={step} isSignup={isSignup} />
 
                   <button
                     type="button"
