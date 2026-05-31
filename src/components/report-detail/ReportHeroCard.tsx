@@ -22,7 +22,7 @@ const ReportHeroCard = ({
       className="relative overflow-hidden rounded-[32px] px-10 md:px-16 pt-12 pb-[45px] flex flex-col gap-4 items-start justify-end"
       style={{
         background:
-          "linear-gradient(165.48deg, #316FFF 0%, #5175C9 50%, #0D1D43 100%)",
+          "linear-gradient(165.48deg, #316FFF 0%, #2457FDCC 50%, #0D1D43 100%)",
         boxShadow: "0px 25px 50px -12px #c6d2ff",
       }}
     >

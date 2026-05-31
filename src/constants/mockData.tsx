@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Brain, CalendarClock, UserX } from "lucide-react";
+import { Brain, CalendarClock, TrendingUp, UserX } from "lucide-react";
 
 // 타입 정의
 
@@ -25,6 +25,8 @@ type PlanItem = {
   popular: boolean;
   disabled?: boolean;
   showButton?: boolean;
+  planType?: string;
+  amount?: number;
 };
 
 type ReviewItem = {
@@ -65,17 +67,22 @@ export const Problems: Problem[] = [
   {
     icon: <Brain className="text-primary" size={32} />,
     title: "틀릴까봐 두려운 마음",
-    desc: "문법이 맞는지, 발음이 이상한지 머릿속으로 번역하느라 타이밍을 놓칩니다.",
+    desc: "문법이 맞는지, 발음이 이상한지\n머릿속으로 번역하느라 타이밍을 놓칩니다.",
   },
-  {
-    icon: <UserX className="text-primary" size={32} />,
-    title: "불편한 시선",
-    desc: "원어민 선생님의 눈빛이나 다른 수강생들의 존재가 때로는 압박으로 다가옵니다.",
-  },
+  // {
+  //   icon: <UserX className="text-primary" size={32} />,
+  //   title: "불편한 시선",
+  //   desc: "원어민 선생님의 눈빛이나 다른 수강생들의 존재가 때로는 압박으로 다가옵니다.",
+  // },
   {
     icon: <CalendarClock className="text-primary" size={32} />,
     title: "부족한 실전 기회",
-    desc: "학원이나 화상 영어를 예약하고 시간을 맞추는 것조차 스트레스가 됩니다.",
+    desc: "학원이나 화상 영어를 예약하고\n시간을 맞추는 것조차 스트레스가 됩니다.",
+  },
+  {
+    icon: <TrendingUp className="text-primary" size={32} />,
+    title: "높은 비용의 장벽",
+    desc: "월 수십만 원의 비용 부담 때문에\n영어 공부를 시작하거나 지속하기 어렵습니다.",
   },
 ];
 
@@ -120,7 +127,7 @@ export const Course: CourseItem[] = [
 
 export const Plan: PlanItem[] = [
   {
-    name: "비기너",
+    name: "Beginner",
     monthlyPrice: "0",
     yearlyPrice: "0",
     desc: "가볍게 시작하고 싶은 입문자용",
@@ -135,7 +142,7 @@ export const Plan: PlanItem[] = [
     showButton: false,
   },
   {
-    name: "프리미엄",
+    name: "Premium",
     monthlyPrice: "59,000",
     yearlyPrice: "47,200",
     desc: "* 데모버전 기간동안 자동적용 됩니다.",
@@ -151,6 +158,44 @@ export const Plan: PlanItem[] = [
     disabled: false,
     showButton: false,
   },
+  // {
+  //   name: "맥스",
+  //   monthlyPrice: "12,900",
+  //   yearlyPrice: "47,200",
+  //   desc: "",
+  //   features: [
+  //     "하루 300분 통화",
+  //     "프리미엄 AI 튜터 제공",
+  //     "상세 문법 교정 리포트",
+  //     "맞춤형 학습 커리큘럼",
+  //     "우선 고객 지원",
+  //   ],
+  //   buttonText: "구독하기",
+  //   popular: false,
+  //   disabled: false,
+  //   showButton: true,
+  //   planType: "premium",
+  //   amount: 9900,
+  // },
+  // {
+  //   name: "프로페셔널",
+  //   monthlyPrice: "19,900",
+  //   yearlyPrice: "47,200",
+  //   desc: "",
+  //   features: [
+  //     "하루 300분 통화",
+  //     "프리미엄 AI 튜터 제공",
+  //     "상세 문법 교정 리포트",
+  //     "맞춤형 학습 커리큘럼",
+  //     "우선 고객 지원",
+  //   ],
+  //   buttonText: "구독하기",
+  //   popular: false,
+  //   disabled: false,
+  //   showButton: true,
+  //   planType: "premium",
+  //   amount: 9900,
+  // },
 ];
 
 export const Review: ReviewItem[] = [
@@ -199,22 +244,22 @@ export const FAQ: FAQ[] = [
   {
     question: "정말 070 번호로 전화만 걸면 되나요?",
     answer:
-      "네, 맞습니다. 별도의 전용 앱 설치나 복잡한 설정 없이, 부여받은 회원 전용 070 번호로 전화를 거시면 바로 대화가 시작됩니다. 해외에서도 로밍 없이 인터넷 전화 등을 통해 이용 가능합니다.",
+      "네, 맞습니다.\n저희는 일반 음성통화(이동통신망)기반 서비스이며, 실제 서비스 번호로 연결하시면 언제 어디서든 통화할 수 있습니다.",
   },
   {
     question: "무료 체험은 어떻게 진행되나요?",
     answer:
-      "회원가입 후 첫 통화(최대 10분)는 완전히 무료로 제공됩니다. 직접 대화해 보시고 AI의 자연스러움을 느껴보세요. 카드 정보 등록도 필요 없습니다.",
+      "저희 서비스는 매일 10분을 무료로 제공하고 있습니다.\n따로 가입을 하지 않아도 첫 통화를 시작할 수 있습니다.\n한국인 맞춤 AI molla와 함께 직접 대화해보고 매끄럽고 자연스러움을 느껴보세요.\n통화 후 제공되는 무료 리포트를 받아보고 결제를 고민해도 늦지 않아요.",
   },
   {
     question: "리포트는 언제 받을 수 있나요?",
     answer:
-      "통화가 종료된 후 1분 내외로 카카오톡 또는 문자를 통해 상세 리포트 링크가 전송됩니다. 대화 전체 텍스트, 문법 교정, 추천 표현, 그리고 당신의 유창성 점수를 확인하실 수 있습니다.",
+      "통화가 종료된 후 수 분 내외로 고객님 계정에서 리포트를 확인할 수 있습니다.\n대화 전체 텍스트, 문법 교정, 추천 표현, 여러 공인 시험 점수를 확인하실 수 있어요..",
   },
   {
     question: "학습 시간 제한이 있나요?",
     answer:
-      "요금제에 따라 다르지만, 기본적으로 24시간 언제든 원하실 때 이용 가능합니다. 예약할 필요 없이 당신이 여유 있는 시간이 바로 학습 시간이 됩니다.",
+      "현재 데모버전에서는 고객 모두 Premium member로 전환됩니다.\n하루 최대 사용량 300분 내에서 언제, 어디서든 원하실 때 부담없이 회화 연습을 해보아요.\n정식 버전에서는 구독 전 Free member는 하루 최대 10분의 사용량,\n구독 후 Premium member는 하루 최대 300분 내에서 자유롭게 서비스를 이용하실 수 있습니다.",
   },
 ];
 

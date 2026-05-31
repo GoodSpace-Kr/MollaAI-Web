@@ -14,11 +14,18 @@ import WeakPoints, {
   type WeakPointItem,
 } from "@/components/report-detail/WeakPoints";
 
-import { getReportDetail, type ReportDetail } from "@/api/reportApi";
+import {
+  getExamDisplayName,
+  getReportDetail,
+  type ReportDetail,
+} from "@/api/reportApi";
 
 import ieltsLogo from "../assest/ielts.svg";
 import toeicLogo from "../assest/toeic.svg";
 import opicLogo from "../assest/opic.svg";
+import FullSessionScript, {
+  type ScriptMessageItem,
+} from "@/components/report-detail/full-script/FullSessionScript";
 
 const logoMap = {
   IELTS: {
@@ -97,7 +104,7 @@ const ReportDetailPage = () => {
     const logo = logoMap[score.exam];
 
     return {
-      title: `${score.exam} PREDICTED`,
+      title: `${getExamDisplayName(score.exam)} PREDICTED`,
       score: score.score,
       maxScore: logo.maxScore,
       logoSrc: logo.logoSrc,
@@ -133,6 +140,30 @@ const ReportDetailPage = () => {
     }),
   );
 
+  const formatTime = (dateString: string) => dateString.slice(11, 19);
+
+  const fullScript: ScriptMessageItem[] = report.transcript.flatMap(
+    (transcript, index) => [
+      {
+        id: index * 2 + 1,
+        speaker: "user" as const,
+        name: "나",
+        time: formatTime(transcript.createdAt),
+        text: transcript.user.text,
+        translation: "",
+        audioUrl: transcript.user.audioUrl,
+      },
+      {
+        id: index * 2 + 2,
+        speaker: "ai" as const,
+        name: "MOLLA",
+        time: formatTime(transcript.assistant.createdAt),
+        text: transcript.assistant.text,
+        translation: transcript.assistant.translatedText,
+      },
+    ],
+  );
+
   return (
     <div className="min-h-screen bg-white px-3 py-10">
       <div className="max-w-7xl mx-auto mt-35 flex flex-col gap-8">
@@ -162,6 +193,10 @@ const ReportDetailPage = () => {
         <div className="flex gap-5 mt-10">
           <HabitAnalysis items={habitAnalysisItems} />
           <WeakPoints items={weakPointItems} />
+        </div>
+
+        <div className="mt-10">
+          <FullSessionScript items={fullScript} />
         </div>
       </div>
     </div>

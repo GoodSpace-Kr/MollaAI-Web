@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { LogIn, LogOut, Menu, X } from "lucide-react";
-import logo from "../../assest/logo.png";
+import logo from "../../assest/logo-name.svg";
 import { Navigation as NavItem } from "../../constants/mockData";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
@@ -30,6 +30,7 @@ const Navigation = ({
   const { isAuthenticated, clearAuth } = useAuthStore();
 
   const isLandingPage = location.pathname === "/";
+  const isDevMode = import.meta.env.DEV;
 
   const handleLogout = () => {
     clearAuth();
@@ -50,7 +51,7 @@ const Navigation = ({
           className="absolute left-6 lg:left-12 flex items-center cursor-pointer shrink-0"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <img src={logo} alt="Molla AI Logo" className="h-10 w-auto" />
+          <img src={logo} alt="Molla AI Logo" className="h-8 w-auto" />
         </div>
 
         {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
@@ -91,13 +92,15 @@ const Navigation = ({
                 로그인
               </button>
 
-              <button
-                onClick={openDevLogin}
-                className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
-              >
-                <LogIn size={16} className="lg:w-4.5 lg:h-4.5" />
-                Dev
-              </button>
+              {isDevMode && (
+                <button
+                  onClick={openDevLogin}
+                  className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+                >
+                  <LogIn size={16} className="lg:w-4.5 lg:h-4.5" />
+                  Dev
+                </button>
+              )}
             </>
           )}
         </div>
@@ -147,7 +150,11 @@ const Navigation = ({
                 </button>
               ) : (
                 /* 비인증 상태: 로그인 + Dev 버튼 */
-                <div className="grid grid-cols-2 gap-4 mt-2">
+                <div
+                  className={`grid gap-4 mt-2 ${
+                    isDevMode ? "grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
                   <button
                     onClick={() => {
                       openLogin();
@@ -158,15 +165,17 @@ const Navigation = ({
                     로그인
                   </button>
 
-                  <button
-                    onClick={() => {
-                      openDevLogin();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
-                  >
-                    Dev
-                  </button>
+                  {isDevMode && (
+                    <button
+                      onClick={() => {
+                        openDevLogin();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                    >
+                      Dev
+                    </button>
+                  )}
                 </div>
               )}
             </div>

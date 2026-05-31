@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import ReportListPage from "./pages/ReportListPage";
 import ReportDetailPage from "./pages/ReportDetailPage";
+import PaymentCallbackPage from "./pages/PaymentCallbackPage";
 import RootLayout from "./layout/RootLayout";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
@@ -19,6 +20,8 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/reports" element={<ReportListPage />} />
           <Route path="/reports/:id" element={<ReportDetailPage />} />
+          {/* NicePay 결제 인증 완료 후 리다이렉트 → approvePayment 호출 → /reports */}
+          <Route path="/payment/callback" element={<PaymentCallbackPage />} />
         </Route>
       </Route>
     </Routes>
