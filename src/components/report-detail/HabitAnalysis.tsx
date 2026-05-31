@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { fadeIn } from "@/pages/LandingPage";
 
 export type HabitAnalysisItem = {
   id: number;
@@ -31,6 +32,7 @@ const HabitAnalysis = ({ items }: HabitAnalysisProps) => {
 
           return (
             <div
+              {...fadeIn}
               key={item.id}
               className="overflow-hidden rounded-[20px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)]"
             >

@@ -4,6 +4,7 @@ import opicLogo from "../assest/opic.svg";
 import { FeedbackItem } from "@/components/report-detail/CoreSentenceFeedback";
 import { HabitAnalysisItem } from "@/components/report-detail/HabitAnalysis";
 import { WeakPointItem } from "@/components/report-detail/WeakPoints";
+import { ScriptMessageItem } from "@/components/report-detail/full-script/FullSessionScript";
 
 export const scorePredictions = [
   {
@@ -77,6 +78,64 @@ export const habitAnalysisItems: HabitAnalysisItem[] = [
     evidence:
       "부사구가 문장 내에서 어색한 위치에 배치되는 패턴이 확인되었습니다.",
     suggestion: "시간, 장소, 방식 부사구의 기본 위치를 다시 확인해보세요.",
+  },
+];
+
+export const mockSessionScriptItems: ScriptMessageItem[] = [
+  {
+    id: 1,
+    speaker: "ai",
+    name: "MOLLA",
+    time: "14:30:05",
+    text: "Hello Jiwoo! Let's start today's session. How do you feel about the current environmental issues?",
+    translation:
+      "안녕하세요 지우! 오늘의 세션을 시작하겠습니다. 현재 환경 문제에 대해 어떻게 생각하시나요?",
+  },
+  {
+    id: 2,
+    speaker: "user",
+    name: "나",
+    time: "14:30:22",
+    text: "I am think that the global warming is more serious than people's think.",
+    translation:
+      "저는 지구 온난화가 사람들이 생각하는 것보다 더 심각하다고 생각합니다.",
+    tag: "proofread",
+    correction: {
+      text: "I believe that global warming is far more severe than most people realize.",
+      translation:
+        "저는 지구 온난화가 대부분의 사람들이 생각하는 것보다 훨씬 더 심각하다고 믿습니다.",
+      grammar:
+        "의견을 표현할 때는 'I think' 또는 'I believe' 형태를 사용하는 것이 자연스럽습니다.",
+      tip: "'far more severe'와 같은 강조 표현을 사용하면 더 자연스럽고 설득력 있는 영어가 됩니다.",
+    },
+  },
+  {
+    id: 3,
+    speaker: "ai",
+    name: "MOLLA",
+    time: "14:32:15",
+    text: "Especially, the melting of Arctic ice is reaching a critical tipping point that we cannot ignore.",
+    translation:
+      "특히 북극의 얼음이 녹는 것은 무시할 수 없는 중요한 전환점에 도달하고 있습니다.",
+    tag: "good",
+  },
+  {
+    id: 4,
+    speaker: "user",
+    name: "나",
+    time: "14:32:40",
+    text: "That's a very sophisticated observation. Using the term 'tipping point' shows high proficiency. What do you think is the most effective solution?",
+    translation:
+      "그것은 매우 정교한 관찰입니다. '팁핑 포인트'라는 용어를 사용하면 높은 숙련도를 보입니다. 가장 효과적인 해결책이 무엇이라고 생각하시나요?",
+  },
+  {
+    id: 5,
+    speaker: "ai",
+    name: "MOLLA",
+    time: "14:32:40",
+    text: "That's a very sophisticated observation. Using the term 'tipping point' shows high proficiency. What do you think is the most effective solution?",
+    translation:
+      "그것은 매우 정교한 관찰입니다. '팁핑 포인트'라는 용어를 사용하면 높은 숙련도를 보입니다. 가장 효과적인 해결책이 무엇이라고 생각하시나요?",
   },
 ];
 

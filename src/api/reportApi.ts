@@ -5,6 +5,17 @@ export type ReportScore = {
   score: string;
 };
 
+export const getExamDisplayName = (exam: ReportScore["exam"]): string => {
+  switch (exam) {
+    case "TOEIC":
+      return "TOEIC SPEAKING";
+    case "IELTS":
+      return "IELTS";
+    case "OPIC":
+      return "OPIC";
+  }
+};
+
 export type ReportSummary = {
   id: string;
   sessionId: string;
@@ -42,6 +53,26 @@ export type HabitAnalysis = {
   suggestion: string;
 };
 
+export type TranscriptUser = {
+  text: string;
+  sampleRate: number;
+  audioKey: string;
+  audioUrl: string;
+};
+
+export type TranscriptAssistant = {
+  text: string;
+  translatedText: string;
+  createdAt: string;
+};
+
+export type TranscriptItem = {
+  index: number;
+  createdAt: string;
+  user: TranscriptUser;
+  assistant: TranscriptAssistant;
+};
+
 export type ReportDetail = {
   id: string;
   sessionId: string;
@@ -51,6 +82,7 @@ export type ReportDetail = {
   habitAnalyses: HabitAnalysis[];
   scores: ReportScore[];
   weakPoints: string[];
+  transcript: TranscriptItem[];
   levelPercentage: number;
   levelAnalysis: string;
   levelResult: string | null;

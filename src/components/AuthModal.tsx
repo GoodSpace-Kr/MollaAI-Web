@@ -10,13 +10,23 @@ type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
   type: "login" | "signup";
+  /** 구독 결제 플로우에서 사용. 인증 완료 시 /reports 이동 대신 이 콜백을 호출 */
+  onSignupComplete?: (tokens: {
+    accessToken: string;
+    refreshToken: string;
+  }) => void;
 };
 
 type AuthStep = "phone" | "code" | "name";
 
 const CODE_TIME_LIMIT = 300;
 
-const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
+const AuthModal = ({
+  isOpen,
+  onClose,
+  type,
+  onSignupComplete,
+}: AuthModalProps) => {
   const navigate = useNavigate();
 
   const { setTokens, setUser } = useAuthStore();
@@ -118,10 +128,18 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         return;
       }
 
-      setTokens({
+      const tokens = {
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
-      });
+      };
+
+      if (onSignupComplete) {
+        onSignupComplete(tokens);
+        onClose();
+        return;
+      }
+
+      setTokens(tokens);
       onClose();
       navigate("/reports");
     } catch (error) {
@@ -142,10 +160,16 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
         username: name,
       });
 
-      // 이름 등록 성공 후 토큰 저장 → isAuthenticated=true (이 시점에 인증 완료)
-      setTokens(pendingTokens);
       setUser(user);
 
+      if (onSignupComplete) {
+        onSignupComplete(pendingTokens);
+        onClose();
+        return;
+      }
+
+      // 이름 등록 성공 후 토큰 저장 → isAuthenticated=true (이 시점에 인증 완료)
+      setTokens(pendingTokens);
       onClose();
       navigate("/reports");
     } catch (error) {
@@ -177,6 +201,17 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
     setName("");
     setErrorMessage("");
     setTimeLeft(CODE_TIME_LIMIT);
+  };
+
+  const handleEnterKey = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    action: () => void,
+    disabled: boolean,
+  ) => {
+    if (e.key === "Enter" && !disabled) {
+      e.preventDefault();
+      action();
+    }
   };
 
   if (!isOpen) return null;
@@ -234,6 +269,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      onKeyDown={(e) =>
+                        handleEnterKey(
+                          e,
+                          handleVerifyCode,
+                          !code.trim() || isCodeExpired || isLoading,
+                        )
+                      }
                       placeholder="01012345678"
                       className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
                     />
@@ -270,6 +312,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                         type="text"
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
+                        onKeyDown={(e) =>
+                          handleEnterKey(
+                            e,
+                            handleVerifyCode,
+                            !code.trim() || isCodeExpired || isLoading,
+                          )
+                        }
                         placeholder="인증번호 6자리"
                         maxLength={6}
                         className={`w-full px-4 py-3 pr-16 bg-surface rounded-xl border transition-all outline-none ${
@@ -297,7 +346,7 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
 
                   <div className="flex justify-between items-center px-1">
                     <p className="text-xs text-on-surface-variant">
-                      {phone}로 전송된 인증번호를 입력하세요.
+                      전송된 인증번호를 입력하세요.
                     </p>
 
                     <button
@@ -333,6 +382,13 @@ const AuthModal = ({ isOpen, onClose, type }: AuthModalProps) => {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
+                      onKeyDown={(e) =>
+                        handleEnterKey(
+                          e,
+                          handleVerifyCode,
+                          !code.trim() || isCodeExpired || isLoading,
+                        )
+                      }
                       placeholder="홍길동"
                       className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
                     />
