@@ -158,6 +158,8 @@ const AuthModal = ({
 
       const user = await registerUser({
         username: name,
+      }, {
+        accessToken: pendingTokens.accessToken,
       });
 
       setUser(user);

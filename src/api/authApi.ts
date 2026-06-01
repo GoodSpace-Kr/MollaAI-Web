@@ -33,6 +33,10 @@ export type RegisterRequest = {
   username: string;
 };
 
+export type RegisterUserOptions = {
+  accessToken?: string;
+};
+
 export type RegisterResponse = {
   id: string;
   phoneNumber: string;
@@ -42,6 +46,13 @@ export type RegisterResponse = {
   status: string;
   firstCallAt: string;
   registeredAt: string;
+};
+
+export type RegisterApiResponse = {
+  code: string;
+  message: string;
+  data: RegisterResponse;
+  timestamp: string;
 };
 
 export const sendAuthCode = async (
@@ -68,11 +79,19 @@ export const verifyAuthCode = async (
 
 export const registerUser = async (
   data: RegisterRequest,
+  options?: RegisterUserOptions,
 ): Promise<RegisterResponse> => {
-  const response = await authAxios.post<RegisterResponse>(
+  const response = await authAxios.post<RegisterApiResponse>(
     "/api/v1/auth/register",
     data,
+    options?.accessToken
+      ? {
+          headers: {
+            Authorization: `Bearer ${options.accessToken}`,
+          },
+        }
+      : undefined,
   );
 
-  return response.data;
+  return response.data.data;
 };
