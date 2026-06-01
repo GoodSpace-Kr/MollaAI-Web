@@ -9,9 +9,7 @@ import StepIndicator from "./StepIndicator";
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  type: "login" | "signup";
-  /** 구독 결제 플로우에서 사용. 인증 완료 시 /reports 이동 대신 이 콜백을 호출 */
-  onSignupComplete?: (tokens: {
+  onAuthComplete?: (tokens: {
     accessToken: string;
     refreshToken: string;
   }) => void;
@@ -21,19 +19,12 @@ type AuthStep = "phone" | "code" | "name";
 
 const CODE_TIME_LIMIT = 300;
 
-const AuthModal = ({
-  isOpen,
-  onClose,
-  type,
-  onSignupComplete,
-}: AuthModalProps) => {
+const AuthModal = ({ isOpen, onClose, onAuthComplete }: AuthModalProps) => {
   const navigate = useNavigate();
 
   const { setTokens, setUser } = useAuthStore();
 
-  const [activeTab, setActiveTab] = useState<"login" | "signup">(type);
   const [step, setStep] = useState<AuthStep>("phone");
-
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
@@ -49,7 +40,6 @@ const AuthModal = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const isSignup = activeTab === "signup";
   const isCodeExpired = step === "code" && timeLeft <= 0;
 
   const formattedTime = `${Math.floor(timeLeft / 60)}:${String(
@@ -57,17 +47,16 @@ const AuthModal = ({
   ).padStart(2, "0")}`;
 
   useEffect(() => {
-    if (isOpen) {
-      setActiveTab(type);
-      setStep("phone");
-      setPhone("");
-      setCode("");
-      setName("");
-      setErrorMessage("");
-      setTimeLeft(CODE_TIME_LIMIT);
-      setPendingTokens(null);
-    }
-  }, [isOpen, type]);
+    if (!isOpen) return;
+
+    setStep("phone");
+    setPhone("");
+    setCode("");
+    setName("");
+    setErrorMessage("");
+    setTimeLeft(CODE_TIME_LIMIT);
+    setPendingTokens(null);
+  }, [isOpen]);
 
   useEffect(() => {
     if (step !== "code" || timeLeft <= 0) return;
@@ -105,6 +94,27 @@ const AuthModal = ({
     }
   };
 
+  const completeAuth = (
+    tokens: {
+      accessToken: string;
+      refreshToken: string;
+    },
+    shouldNavigate = true,
+  ) => {
+    if (onAuthComplete) {
+      onAuthComplete(tokens);
+      onClose();
+      return;
+    }
+
+    setTokens(tokens);
+    onClose();
+
+    if (shouldNavigate) {
+      navigate("/reports");
+    }
+  };
+
   const handleVerifyCode = async () => {
     if (!code.trim() || isCodeExpired) return;
 
@@ -117,65 +127,45 @@ const AuthModal = ({
         code,
       });
 
-      if (result.isNewUser) {
-        // 신규 회원: 이름 등록 완료 전까지 토큰을 임시 보관
-        // (setTokens를 여기서 호출하면 isAuthenticated=true → PublicRoute가 바로 리다이렉트)
-        setPendingTokens({
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-        });
-        setStep("name");
-        return;
-      }
-
       const tokens = {
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       };
 
-      if (onSignupComplete) {
-        onSignupComplete(tokens);
-        onClose();
+      if (result.isNewUser) {
+        setPendingTokens(tokens);
+        setStep("name");
         return;
       }
 
-      setTokens(tokens);
-      onClose();
-      navigate("/reports");
-    } catch (error) {
+      completeAuth(tokens);
+    } catch {
       setErrorMessage("인증번호가 올바르지 않습니다. 다시 확인해주세요.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSignupComplete = async () => {
+  const handleRegisterName = async () => {
     if (!name.trim() || !pendingTokens) return;
 
     try {
       setIsLoading(true);
       setErrorMessage("");
 
-      const user = await registerUser({
-        username: name,
-      }, {
-        accessToken: pendingTokens.accessToken,
-      });
+      const user = await registerUser(
+        {
+          username: name,
+        },
+        {
+          accessToken: pendingTokens.accessToken,
+        },
+      );
 
       setUser(user);
-
-      if (onSignupComplete) {
-        onSignupComplete(pendingTokens);
-        onClose();
-        return;
-      }
-
-      // 이름 등록 성공 후 토큰 저장 → isAuthenticated=true (이 시점에 인증 완료)
-      setTokens(pendingTokens);
-      onClose();
-      navigate("/reports");
-    } catch (error) {
-      setErrorMessage("회원가입에 실패했습니다. 다시 시도해주세요.");
+      completeAuth(pendingTokens);
+    } catch {
+      setErrorMessage("이름 등록에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
     }
@@ -193,16 +183,6 @@ const AuthModal = ({
     if (step === "name") {
       resetCodeStep();
     }
-  };
-
-  const changeAuthType = () => {
-    setActiveTab((prev) => (prev === "login" ? "signup" : "login"));
-    setStep("phone");
-    setPhone("");
-    setCode("");
-    setName("");
-    setErrorMessage("");
-    setTimeLeft(CODE_TIME_LIMIT);
   };
 
   const handleEnterKey = (
@@ -247,9 +227,11 @@ const AuthModal = ({
                 </button>
               )}
 
-              <div className="text-xl font-bold">
-                {isSignup ? "회원가입" : "로그인"}
-              </div>
+              <h2 className="text-xl font-bold">
+                {step === "phone" && "전화번호 인증"}
+                {step === "code" && "인증번호 입력"}
+                {step === "name" && "이름 등록"}
+              </h2>
 
               <button
                 type="button"
@@ -260,35 +242,33 @@ const AuthModal = ({
               </button>
             </div>
 
-            <form className="" onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={(e) => e.preventDefault()}>
               {step === "phone" && (
                 <>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 ml-1">
-                      전화번호
-                    </label>
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      onKeyDown={(e) =>
-                        handleEnterKey(
-                          e,
-                          handleVerifyCode,
-                          !code.trim() || isCodeExpired || isLoading,
-                        )
-                      }
-                      placeholder="01012345678"
-                      className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
-                    />
-                  </div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 ml-1">
+                    전화번호
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    onKeyDown={(e) =>
+                      handleEnterKey(
+                        e,
+                        handleSendCode,
+                        !phone.trim() || isLoading,
+                      )
+                    }
+                    placeholder="01012345678"
+                    className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                  />
 
                   <p className="text-xs text-on-surface-variant ml-1 mt-2 leading-relaxed">
                     입력한 전화번호로 인증번호가 전송됩니다.
                   </p>
 
-                  <div className="pt-2 pb-3">
-                    <StepIndicator step={step} isSignup={isSignup} />
+                  <div className="py-3">
+                    <StepIndicator step={step} />
                   </div>
 
                   <button
@@ -346,7 +326,7 @@ const AuthModal = ({
                     )}
                   </div>
 
-                  <div className="flex justify-between items-center px-1">
+                  <div className="flex justify-between items-center px-2 mt-1">
                     <p className="text-xs text-on-surface-variant">
                       전송된 인증번호를 입력하세요.
                     </p>
@@ -361,7 +341,9 @@ const AuthModal = ({
                     </button>
                   </div>
 
-                  <StepIndicator step={step} isSignup={isSignup} />
+                  <div className="py-3">
+                    <StepIndicator step={step} />
+                  </div>
 
                   <button
                     type="button"
@@ -374,37 +356,37 @@ const AuthModal = ({
                 </>
               )}
 
-              {step === "name" && isSignup && (
+              {step === "name" && (
                 <>
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 ml-1">
-                      이름
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      onKeyDown={(e) =>
-                        handleEnterKey(
-                          e,
-                          handleVerifyCode,
-                          !code.trim() || isCodeExpired || isLoading,
-                        )
-                      }
-                      placeholder="홍길동"
-                      className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
-                    />
-                  </div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 ml-1">
+                    이름
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    onKeyDown={(e) =>
+                      handleEnterKey(
+                        e,
+                        handleRegisterName,
+                        !code.trim() || isLoading,
+                      )
+                    }
+                    placeholder="홍길동"
+                    className="w-full px-4 py-3 bg-surface rounded-xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                  />
 
-                  <p className="text-xs text-on-surface-variant ml-1 leading-relaxed">
-                    서비스에서 사용할 이름을 입력하면 회원가입이 완료됩니다.
+                  <p className="text-xs text-on-surface-variant ml-1 mt-1 leading-relaxed">
+                    신규 사용자입니다. 서비스에서 사용할 이름을 입력해주세요.
                   </p>
 
-                  <StepIndicator step={step} isSignup={isSignup} />
+                  <div className="py-3">
+                    <StepIndicator step={step} />
+                  </div>
 
                   <button
                     type="button"
-                    onClick={handleSignupComplete}
+                    onClick={handleRegisterName}
                     className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-primary/20 transition-all mt-4 disabled:opacity-50"
                     disabled={!name.trim() || isLoading}
                   >
@@ -419,20 +401,6 @@ const AuthModal = ({
                 </p>
               )}
             </form>
-
-            <div className="mt-8 text-center">
-              <p className="text-sm text-on-surface-variant">
-                {isSignup ? "이미 계정이 있으신가요?" : "계정이 없으신가요?"}
-                <button
-                  type="button"
-                  onClick={changeAuthType}
-                  className="ml-2 text-primary font-bold hover:underline"
-                  disabled={isLoading}
-                >
-                  {isSignup ? "로그인하기" : "지금 가입하기"}
-                </button>
-              </p>
-            </div>
           </div>
         </motion.div>
       </div>

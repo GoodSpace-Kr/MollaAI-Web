@@ -8,7 +8,7 @@ import {
   Mail,
   Check,
 } from "lucide-react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import FAQItem from "../components/FAQItem";
 import Footer from "../components/common/Footer";
 import { Course, FAQ, Plan, Problems, Review } from "../constants/mockData";
@@ -17,6 +17,7 @@ import { useState } from "react";
 import AlertModal from "@/components/common/AlertModal";
 import { createInquiry } from "@/api/feedbackApi";
 import molla from "../assest/logo.svg";
+import { useAuthStore } from "@/stores/authStore";
 
 export const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -34,6 +35,9 @@ export default function LandingPage() {
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", content: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,6 +64,15 @@ export default function LandingPage() {
       const offsetPosition = elementRect - bodyRect - offset;
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
+  };
+
+  const handleStartTrial = () => {
+    if (isAuthenticated) {
+      navigate("/reports");
+      return;
+    }
+
+    openSignup();
   };
 
   return (
@@ -96,7 +109,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
-                  onClick={openSignup}
+                  onClick={handleStartTrial}
                   className="bg-primary text-on-primary px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 group"
                 >
                   무료 체험 시작하기

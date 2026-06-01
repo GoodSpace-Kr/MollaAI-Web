@@ -2,10 +2,9 @@ type AuthStep = "phone" | "code" | "name";
 
 type StepIndicatorProps = {
   step: AuthStep;
-  isSignup: boolean;
 };
 
-const StepIndicator = ({ step, isSignup }: StepIndicatorProps) => {
+const StepIndicator = ({ step }: StepIndicatorProps) => {
   return (
     <div className="flex items-center justify-center gap-2 pt-2">
       <div
@@ -18,13 +17,11 @@ const StepIndicator = ({ step, isSignup }: StepIndicatorProps) => {
           step === "code" ? "bg-primary" : "bg-surface-container"
         }`}
       />
-      {isSignup && (
-        <div
-          className={`h-2 w-2 rounded-full ${
-            step === "name" ? "bg-primary" : "bg-surface-container"
-          }`}
-        />
-      )}
+      <div
+        className={`h-2 w-2 rounded-full ${
+          step === "name" ? "bg-primary" : "bg-surface-container"
+        }`}
+      />
     </div>
   );
 };
