@@ -57,7 +57,6 @@ export const Navigation: NavItem[] = [
   { label: "서비스 소개", id: "서비스 소개" },
   { label: "학습 코스", id: "학습 코스" },
   { label: "요금", id: "요금" },
-  { label: "후기", id: "후기" },
   { label: "FAQ", id: "FAQ" },
   { label: "위치", id: "위치" },
   { label: "문의하기", id: "문의하기" },

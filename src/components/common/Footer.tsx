@@ -4,8 +4,8 @@ import { Info } from "../../constants/mockData";
 
 const Footer = () => {
   return (
-    <footer className="bg-surface py-20 px-6 md:px-12 border-t border-surface-container">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <footer className="bg-surface py-10 px-6 md:px-12 border-t border-surface-container">
+      {/* <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         <div className="space-y-6">
           <div className="flex items-center">
             <img src={logo} alt="Molla AI Logo" className="h-24 w-auto" />
@@ -15,22 +15,6 @@ const Footer = () => {
             <br />
             AI와 함께하는 가장 안전한 학습 공간.
           </p>
-          {/* <div className="flex gap-4">
-            {[
-              { icon: <Instagram size={20} />, link: "#" },
-              { icon: <Twitter size={20} />, link: "#" },
-              { icon: <Facebook size={20} />, link: "#" },
-              { icon: <Github size={20} />, link: "#" },
-            ].map((item, i) => (
-              <a
-                key={i}
-                href={item.link}
-                className="w-10 h-10 bg-surface-container rounded-full flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer text-on-surface-variant"
-              >
-                {item.icon}
-              </a>
-            ))}
-          </div> */}
         </div>
 
         {Info.map((col, i) => (
@@ -52,8 +36,8 @@ const Footer = () => {
             </ul>
           </div>
         ))}
-      </div>
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-surface-container flex flex-col md:flex-row justify-between items-center gap-6">
+      </div> */}
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
         <p className="text-on-surface-variant/60 text-sm">
           © 2026 MollaTalk Inc. All rights reserved.
         </p>
@@ -73,8 +57,12 @@ const Footer = () => {
               scrollbar-thumb-rounded-full
               scrollbar-thumb-[#CBD5E1]
               scrollbar-track-transparent
-              absolute bottom-full right-0 mb-3
-              w-[520px]
+              absolute bottom-full mb-3
+              left-1/2 -translate-x-1/2
+              md:left-auto md:translate-x-0 md:right-0
+
+              w-[calc(100vw-32px)]
+              max-w-[520px]
               max-h-[500px]
               overflow-y-auto
 

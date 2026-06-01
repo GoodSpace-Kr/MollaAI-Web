@@ -190,7 +190,7 @@ const ReportDetailPage = () => {
           <CoreSentenceFeedback items={feedbackItems} />
         </div>
 
-        <div className="flex gap-5 mt-10">
+        <div className="flex flex-col md:flex-row gap-18 md:gap-5 mt-10">
           <HabitAnalysis items={habitAnalysisItems} />
           <WeakPoints items={weakPointItems} />
         </div>

@@ -1,5 +1,6 @@
 import subsIcon from "../../assest/subs.svg";
 import crownIcon from "../../assest/icon/crown.svg";
+import { useState } from "react";
 
 type Props = {
   planName?: string;
@@ -10,6 +11,8 @@ const SubscriptionPlanCard = ({
   planName = "Premium Plan",
   onManageSubscription,
 }: Props) => {
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
+
   return (
     <div
       className="relative overflow-hidden rounded-[32px] p-10 flex flex-col w-full"

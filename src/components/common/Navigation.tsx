@@ -56,7 +56,7 @@ const Navigation = ({
 
         {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
         {isLandingPage && (
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
+          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4 ">
             {NavItem.map((item) => (
               <a
                 key={item.id}
@@ -121,7 +121,11 @@ const Navigation = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="absolute top-full left-0 w-full bg-white border-t border-surface-container overflow-hidden md:hidden shadow-xl"
+            className={`absolute top-full left-0 w-full bg-white border-t border-surface-container overflow-hidden md:hidden shadow-xl ${
+              isScrolled
+                ? "bg-surface/80 backdrop-blur-md shadow-sm"
+                : "bg-transparent"
+            }`}
           >
             <div className="p-6 flex flex-col gap-4">
               {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
@@ -151,8 +155,10 @@ const Navigation = ({
               ) : (
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div
-                  className={`grid gap-4 mt-2 ${
-                    isDevMode ? "grid-cols-2" : "grid-cols-1"
+                  className={`mt-2 ${
+                    isDevMode
+                      ? "grid grid-cols-2 gap-4"
+                      : "flex justify-center "
                   }`}
                 >
                   <button

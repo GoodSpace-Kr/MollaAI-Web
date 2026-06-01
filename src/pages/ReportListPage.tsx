@@ -117,13 +117,13 @@ const ReportListPage = () => {
           </section>
         )}
 
-        <div className="flex justify-between">
+        <div className="flex flex-col md:flex-row justify-between">
           <div>
             <div className="text-[#0F172B] text-[34px] font-bold">
               학습 리포트 보관함
             </div>
             <div className="text-[18px] text-[#62748E] font-medium">
-              지금까지 진행한 총{" "}
+              지금까지 진행한{" "}
               <span className="text-[#3C64E8] font-bold">
                 {filteredReports.length}개
               </span>
