@@ -45,18 +45,25 @@ const Navigation = ({
           : "bg-transparent"
       }`}
     >
-      <div className="relative max-w-7xl mx-auto h-[90px] px-6 lg:px-12 flex items-center justify-center">
+      <div className="relative max-w-7xl mx-auto h-[90px] px-6 md:px-12 flex items-center justify-center">
         {/* 로고 */}
         <div
           className="absolute left-6 lg:left-12 flex items-center cursor-pointer shrink-0"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => {
+            if (location.pathname === "/") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              return;
+            }
+
+            navigate("/");
+          }}
         >
           <img src={logo} alt="Molla AI Logo" className="h-8 w-auto" />
         </div>
 
         {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
         {isLandingPage && (
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4">
+          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4 ">
             {NavItem.map((item) => (
               <a
                 key={item.id}
@@ -89,7 +96,7 @@ const Navigation = ({
                 className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
               >
                 <LogIn size={16} className="lg:w-4.5 lg:h-4.5" />
-                로그인
+                로그인 / 회원가입
               </button>
 
               {isDevMode && (
@@ -121,7 +128,11 @@ const Navigation = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="absolute top-full left-0 w-full bg-white border-t border-surface-container overflow-hidden md:hidden shadow-xl"
+            className={`absolute top-full left-0 w-full border-t border-surface-container overflow-hidden md:hidden transition-all duration-300 ${
+              isScrolled
+                ? "bg-surface/80 backdrop-blur-md shadow-sm"
+                : "bg-white/90 backdrop-blur-md shadow-sm"
+            }`}
           >
             <div className="p-6 flex flex-col gap-4">
               {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
@@ -151,8 +162,10 @@ const Navigation = ({
               ) : (
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div
-                  className={`grid gap-4 mt-2 ${
-                    isDevMode ? "grid-cols-2" : "grid-cols-1"
+                  className={`mt-2 ${
+                    isDevMode
+                      ? "grid grid-cols-2 gap-4"
+                      : "flex justify-center "
                   }`}
                 >
                   <button

@@ -6,11 +6,6 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 
-type AuthModalState = {
-  isOpen: boolean;
-  type: "login" | "signup";
-};
-
 type PaymentPlan = {
   planName: string;
   planType: string;
@@ -28,10 +23,7 @@ const RootLayout = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const [authModal, setAuthModal] = useState<AuthModalState>({
-    isOpen: false,
-    type: "login",
-  });
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [devModalOpen, setDevModalOpen] = useState(false);
 
   const [paymentPlan, setPaymentPlan] = useState<PaymentPlan | null>(null);
@@ -43,29 +35,32 @@ const RootLayout = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const openLogin = () => setAuthModal({ isOpen: true, type: "login" });
-  const openSignup = () => {
+  const openAuthModal = () => {
     setPaymentPlan(null);
-    setAuthModal({ isOpen: true, type: "signup" });
+    setAuthModalOpen(true);
   };
+
+  const openLogin = openAuthModal;
+  const openSignup = openAuthModal;
+
   const openDevLogin = () => setDevModalOpen(true);
 
   const openSignupWithPayment = (plan: PaymentPlan) => {
     setPaymentPlan(plan);
-    setAuthModal({ isOpen: true, type: "signup" });
+    setAuthModalOpen(true);
   };
 
-  const handleSignupComplete = (tokens: {
+  const handleAuthCompleteWithPayment = (tokens: {
     accessToken: string;
     refreshToken: string;
   }) => {
-    // 토큰 저장 → isAuthenticated=true → PublicRoute가 /reports로 자동 전환
     setTokens(tokens);
-    // PaymentModal은 RootLayout에 마운트되어 있어 라우트 전환 후에도 유지됨
+    setAuthModalOpen(false);
     setPaymentModalOpen(true);
   };
 
@@ -74,13 +69,20 @@ const RootLayout = () => {
     id: string,
   ) => {
     e.preventDefault();
+
     const element = document.getElementById(id);
+
     if (element) {
       const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const offsetPosition = elementRect - bodyRect - offset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
       setMobileMenuOpen(false);
     }
   };
@@ -98,16 +100,19 @@ const RootLayout = () => {
 
       <Outlet
         context={
-          { openLogin, openSignup, openSignupWithPayment } satisfies RootLayoutContext
+          {
+            openLogin,
+            openSignup,
+            openSignupWithPayment,
+          } satisfies RootLayoutContext
         }
       />
 
       {/* 모달은 인증 여부에 관계없이 DOM에 존재하되 isOpen으로 표시 제어 */}
       <AuthModal
-        isOpen={authModal.isOpen}
-        onClose={() => setAuthModal((prev) => ({ ...prev, isOpen: false }))}
-        type={authModal.type}
-        onSignupComplete={paymentPlan ? handleSignupComplete : undefined}
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onAuthComplete={paymentPlan ? handleAuthCompleteWithPayment : undefined}
       />
 
       <DevAuthModal

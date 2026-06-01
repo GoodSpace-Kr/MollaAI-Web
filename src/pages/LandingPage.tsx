@@ -8,7 +8,7 @@ import {
   Mail,
   Check,
 } from "lucide-react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import FAQItem from "../components/FAQItem";
 import Footer from "../components/common/Footer";
 import { Course, FAQ, Plan, Problems, Review } from "../constants/mockData";
@@ -17,6 +17,7 @@ import { useState } from "react";
 import AlertModal from "@/components/common/AlertModal";
 import { createInquiry } from "@/api/feedbackApi";
 import molla from "../assest/logo.svg";
+import { useAuthStore } from "@/stores/authStore";
 
 export const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -34,6 +35,9 @@ export default function LandingPage() {
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", content: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,11 +66,20 @@ export default function LandingPage() {
     }
   };
 
+  const handleStartTrial = () => {
+    if (isAuthenticated) {
+      navigate("/reports");
+      return;
+    }
+
+    openSignup();
+  };
+
   return (
     <div className="min-h-screen bg-white selection:bg-primary/20 font-sans antialiased">
       <main>
         {/* Hero Section */}
-        <section className="pt-24 pb-16 md:pt-40 md:pb-24 lg:pt-35 lg:pb-25 px-6 lg:px-10 max-w-7xl mx-auto overflow-hidden">
+        <section className="pb-16 pt-35 md:pt-40 md:pb-24 lg:pb-25 px-6 lg:px-10 max-w-7xl mx-auto overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -96,7 +109,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
-                  onClick={openSignup}
+                  onClick={handleStartTrial}
                   className="bg-primary text-on-primary px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 group"
                 >
                   무료 체험 시작하기
@@ -237,7 +250,7 @@ export default function LandingPage() {
           id="요금"
           className="py-24 md:py-32 px-6 md:px-12 bg-surface-container-low"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="md:max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center space-y-6 mb-16">
               <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                 Pricing Plans
@@ -247,7 +260,7 @@ export default function LandingPage() {
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-5 mx-50">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:mx-50">
               {Plan.map((plan, i) => (
                 <motion.div
                   key={i}
@@ -327,7 +340,7 @@ export default function LandingPage() {
           id="FAQ"
           className="py-24 md:py-32 px-6 md:px-12 max-w-[950px] mx-auto"
         >
-          <motion.div {...fadeIn} className="text-center space-y-0 mb-16">
+          <motion.div {...fadeIn} className="text-center space-y-6 mb-16">
             <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
               Support
             </div>
@@ -433,9 +446,10 @@ export default function LandingPage() {
             >
               <div className="text-center space-y-4 mb-12">
                 <h2 className="text-3xl md:text-5xl font-bold">문의하기</h2>
-                <p className="text-on-surface-variant">
-                  여러분의 의견이 더 나은 서비스로 이어집니다.불편했던 점,
-                  좋았던 점, 개선 아이디어를 자유롭게 남겨주세요.
+                <p className="text-on-surface-variant leading-tight">
+                  여러분의 의견이 더 나은 서비스로 이어집니다.
+                  <br />
+                  불편했던 점, 좋았던 점, 개선 아이디어를 자유롭게 남겨주세요.
                 </p>
               </div>
 
