@@ -85,7 +85,9 @@ export default function LandingPage() {
                 영어 공포증,
                 <br />
                 이제 전화 한 통으로 <br />
-                <div className="text-primary pt-6">녹여보세요. 070-5236-1004</div>
+                <div className="text-3xl md:text-5xl text-primary pt-6">
+                  070-5236-1004
+                </div>
               </h1>
               <p className="text-base md:text-lg lg:text-xl text-on-surface-variant  leading-relaxed mx-auto lg:mx-0">
                 AI 원어민과 실시간으로 대화하며 자연스럽게 입을 열어보세요.{" "}
