@@ -37,17 +37,6 @@ const Navigation = ({
     navigate("/");
   };
 
-  const handleLogoClick = () => {
-    if (isLandingPage) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setMobileMenuOpen(false);
-      return;
-    }
-
-    setMobileMenuOpen(false);
-    navigate("/");
-  };
-
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -60,7 +49,7 @@ const Navigation = ({
         {/* 로고 */}
         <div
           className="absolute left-6 lg:left-12 flex items-center cursor-pointer shrink-0"
-          onClick={handleLogoClick}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
           <img src={logo} alt="Molla AI Logo" className="h-8 w-auto" />
         </div>
