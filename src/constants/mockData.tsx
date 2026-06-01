@@ -55,7 +55,6 @@ type FAQ = {
 
 export const Navigation: NavItem[] = [
   { label: "서비스 소개", id: "서비스 소개" },
-  { label: "학습 코스", id: "학습 코스" },
   { label: "요금", id: "요금" },
   { label: "FAQ", id: "FAQ" },
   { label: "위치", id: "위치" },
@@ -130,12 +129,7 @@ export const Plan: PlanItem[] = [
     monthlyPrice: "0",
     yearlyPrice: "0",
     desc: "가볍게 시작하고 싶은 입문자용",
-    features: [
-      "하루 10분 통화",
-      "기본 AI 튜터 제공",
-      "학습 리포트 제공",
-      "메신저 알림",
-    ],
+    features: ["하루 10분 통화", "기본 AI 튜터 제공", "학습 리포트 제공"],
     buttonText: "시작하기",
     popular: false,
     showButton: false,
@@ -149,8 +143,6 @@ export const Plan: PlanItem[] = [
       "하루 300분 통화",
       "프리미엄 AI 튜터 제공",
       "상세 문법 교정 리포트",
-      "맞춤형 학습 커리큘럼",
-      "우선 고객 지원",
     ],
     buttonText: "시작하기",
     popular: false,

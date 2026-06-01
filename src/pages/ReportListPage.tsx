@@ -119,11 +119,11 @@ const ReportListPage = () => {
 
         <div className="flex flex-col md:flex-row justify-between">
           <div>
-            <div className="text-[#0F172B] text-[34px] font-bold">
+            <div className="text-[#0F172B] text-[25px] md:text-[34px] font-bold">
               학습 리포트 보관함
             </div>
-            <div className="text-[18px] text-[#62748E] font-medium">
-              지금까지 진행한{" "}
+            <div className="text-[13px] md:text-[18px] text-[#62748E] font-medium">
+              지금까지 진행한 총{" "}
               <span className="text-[#3C64E8] font-bold">
                 {filteredReports.length}개
               </span>
@@ -131,25 +131,30 @@ const ReportListPage = () => {
             </div>
           </div>
 
-          <div className="relative mt-7">
+          <div className="relative mt-3 md:mt-7">
             <img
               src={searchIcon}
               alt="검색"
-              className="absolute left-4.5 top-6.5 -translate-y-1/2 w-5 h-5 pointer-events-none"
+              className="absolute left-3 top-5 md:left-4.5 md:top-6.5 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 pointer-events-none"
             />
             <input
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="리포트 제목 또는 키워드 검색"
               className="
-                w-[320px]
-                h-[49px]
-                rounded-[16px]
+                max-w-[250px]
+                h-[40px]
+                md:w-[320px]
+                md:h-[49px]
+                rounded-[13px]
+                md:rounded-[16px]
                 border border-[#E2E8F0]
                 bg-white
-                pl-12
+                pl-8.5
+                md:pl-12
                 pr-6
-                text-[14px]
+                text-[13px]
+                md:text-[14px]
                 text-[#0F172B]
                 placeholder:text-[#B9B9B9]
                 outline-none

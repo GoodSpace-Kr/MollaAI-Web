@@ -208,48 +208,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section
-          id="학습 코스"
-          className="py-24 md:py-32 px-6 md:px-12 max-w-7xl mx-auto"
-        >
-          <motion.div
-            {...fadeIn}
-            className="text-center space-y-4 mb-20 md:mb-32"
-          >
-            <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
-              Curriculum
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
-              고객님에게 필요한 모든 상황
-            </h2>
-            <p className="text-on-surface-variant max-w-2xl mx-auto text-lg">
-              왕초보부터 비즈니스까지, 500개 이상의 테마별 코스
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {Course.map((course, i) => (
-              <motion.div
-                key={i}
-                {...fadeIn}
-                transition={{ delay: i * 0.05 }}
-                className={`${course.color} p-8 rounded-3xl hover:-translate-y-2 transition-transform cursor-pointer group`}
-              >
-                <h4 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                  {course.title}
-                </h4>
-                <p className="text-on-surface-variant text-sm">{course.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
         {/* Pricing Section */}
-        <section
-          id="요금"
-          className="py-24 md:py-32 px-6 md:px-12 bg-surface-container-low"
-        >
+        <section id="요금" className="py-24 md:py-32 px-6 md:px-12">
           <div className="md:max-w-7xl mx-auto">
             <motion.div {...fadeIn} className="text-center space-y-6 mb-16">
               <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
@@ -338,7 +298,7 @@ export default function LandingPage() {
         {/* FAQ Section */}
         <section
           id="FAQ"
-          className="py-24 md:py-32 px-6 md:px-12 max-w-[950px] mx-auto"
+          className="py-24 md:py-32 px-6 md:px-115 bg-surface-container-low"
         >
           <motion.div {...fadeIn} className="text-center space-y-6 mb-16">
             <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
@@ -364,10 +324,7 @@ export default function LandingPage() {
         </section>
 
         {/* Location Section */}
-        <section
-          id="위치"
-          className="bg-surface-container-low py-24 md:py-32 px-6 md:px-12"
-        >
+        <section id="위치" className=" py-24 md:py-32 px-6 md:px-12">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <motion.div {...fadeIn} className="space-y-6">
@@ -438,7 +395,10 @@ export default function LandingPage() {
         </section>
 
         {/* Contact Section */}
-        <section id="문의하기" className="py-24 md:py-32 px-6 md:px-12">
+        <section
+          id="문의하기"
+          className="py-24 md:py-32 px-6 md:px-12 bg-surface-container-low"
+        >
           <div className="max-w-4xl mx-auto">
             <motion.div
               {...fadeIn}

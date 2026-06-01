@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScriptTag, { type ScriptTagType } from "./ScriptTag";
 import audioIcon from "../../../assest/icon/audio.svg";
+import playIcon from "../../../assest/icon/play.svg";
 
 type ScriptCorrection = {
   text: string;
@@ -27,38 +28,120 @@ type ScriptMessageProps = {
 
 const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const resetAudioState = () => {
+    setIsPlaying(false);
+    setProgress(0);
+    setIsLoading(false);
+  };
 
   const handleClick = async () => {
     if (!audioUrl) return;
 
-    const audio = audioRef.current;
-    if (audio && !audio.paused) {
-      audio.pause();
-      audio.currentTime = 0;
+    const currentAudio = audioRef.current;
+
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      resetAudioState();
       return;
     }
 
     setIsLoading(true);
+
     try {
-      const newAudio = new Audio(audioUrl);
-      audioRef.current = newAudio;
-      await newAudio.play();
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.addEventListener("play", () => {
+        setIsPlaying(true);
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        if (!audio.duration) return;
+
+        const nextProgress = (audio.currentTime / audio.duration) * 100;
+        setProgress(nextProgress);
+      });
+
+      audio.addEventListener("ended", () => {
+        resetAudioState();
+        audio.currentTime = 0;
+      });
+
+      audio.addEventListener("pause", () => {
+        if (audio.currentTime >= audio.duration) return;
+        resetAudioState();
+      });
+
+      await audio.play();
     } catch (error) {
       console.error("[AudioButton] 재생 실패:", error);
+      resetAudioState();
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
+  }, []);
 
   return (
     <button
       type="button"
       onClick={handleClick}
       disabled={isLoading || !audioUrl}
-      className="flex size-[38px] shrink-0 items-center justify-center rounded-full border border-[#E2E8F0] bg-white text-[#94A3B8] transition-all hover:bg-[#F8FAFC] hover:text-[#5272FF] disabled:cursor-not-allowed disabled:opacity-40"
+      className="
+        relative
+        flex
+        size-[38px]
+        shrink-0
+        items-center
+        justify-center
+        rounded-full
+        bg-white
+        text-[#94A3B8]
+        transition-all
+        hover:bg-[#F8FAFC]
+        hover:text-[#5272FF]
+        disabled:cursor-not-allowed
+        disabled:opacity-40
+      "
     >
-      <img src={audioIcon} className="w-3.5 h-3.5" />
+      <span
+        className="
+          absolute
+          inset-0
+          rounded-full
+          border
+          border-[#E2E8F0]
+        "
+      />
+
+      {isPlaying && (
+        <span
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `conic-gradient(var(--color-primary) ${progress * 3.6}deg, transparent 0deg)`,
+          }}
+        />
+      )}
+
+      <span className="absolute inset-[2px] rounded-full bg-white" />
+
+      <img
+        src={isPlaying ? playIcon : audioIcon}
+        alt={isPlaying ? "재생 중" : "오디오 듣기"}
+        className="relative z-10 w-3.5 h-3.5"
+      />
     </button>
   );
 };
