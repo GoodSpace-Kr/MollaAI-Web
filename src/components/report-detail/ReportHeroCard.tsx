@@ -19,7 +19,7 @@ const ReportHeroCard = ({
 }: ReportHeroCardProps) => {
   return (
     <div
-      className="relative overflow-hidden rounded-[32px] px-10 md:px-16 pt-12 pb-[45px] flex flex-col gap-4 items-start justify-end"
+      className="relative overflow-hidden rounded-[32px] px-6 md:px-16 pt-12 pb-[45px] flex flex-col gap-4 items-start justify-end"
       style={{
         background:
           "linear-gradient(165.48deg, #316FFF 0%, #2457FDCC 50%, #0D1D43 100%)",
@@ -50,7 +50,7 @@ const ReportHeroCard = ({
         <p className="text-[#a1b7e9] text-[20px] md:text-[28px] font-semibold leading-[1.4]">
           {subTitle}
         </p>
-        <p className="text-white text-[28px] md:text-[40px] font-bold leading-[1.25]">
+        <p className="text-white text-[24px] md:text-[40px] font-bold leading-[1.25]">
           {title}
         </p>
       </div>
