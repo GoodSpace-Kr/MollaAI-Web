@@ -94,7 +94,7 @@ export default function LandingPage() {
                 </span>
                 24시간 언제 어디서나 Molla와 함께
               </div>
-              <h1 className="text-5xl md:text-[76px] font-bold text-on-surface leading-[1.05] tracking-tight">
+              <h1 className="text-4xl md:text-[76px] font-bold text-on-surface leading-[1.05] tracking-tight">
                 영어 공포증,
                 <br />
                 이제 전화 한 통으로 <br />
@@ -177,7 +177,7 @@ export default function LandingPage() {
               <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                 The Challenge
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
+              <h2 className="text-[22px] md:text-5xl font-bold text-on-surface">
                 왜 우리는 영어 앞에서 작아질까요?
               </h2>
               <p className="text-on-surface-variant max-w-2xl mx-auto text-lg">
@@ -185,7 +185,7 @@ export default function LandingPage() {
               </p>
             </motion.div>
 
-            <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-10 px-10">
+            <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-10 px-2 md:px-10">
               {Problems.map((item, i) => (
                 <motion.div
                   key={i}
@@ -215,7 +215,7 @@ export default function LandingPage() {
               <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                 Pricing Plans
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
+              <h2 className="text-[22px] md:text-5xl font-bold text-on-surface">
                 합리적인 비용으로 시작하세요
               </h2>
             </motion.div>
@@ -238,8 +238,8 @@ export default function LandingPage() {
                     <p
                       className={` ${
                         plan.name === "Beginner"
-                          ? "text-[#64748B] font-medium"
-                          : "text-primary font-bold"
+                          ? "text-[#64748B] text-[14px] md:text-[15px] font-medium"
+                          : "text-primary text-[14px] md:text-[15px] font-bold"
                       }`}
                     >
                       {plan.desc}
@@ -304,7 +304,7 @@ export default function LandingPage() {
             <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
               Support
             </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
+            <h2 className="text-[22px] md:text-5xl font-bold text-on-surface">
               자주 묻는 질문
             </h2>
           </motion.div>
@@ -331,7 +331,7 @@ export default function LandingPage() {
                 <div className="text-primary font-bold tracking-[0.2em] text-sm uppercase">
                   Visit Us
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold text-on-surface">
+                <h2 className="text-[22px] md:text-5xl font-bold text-on-surface">
                   찾아오시는 길
                 </h2>
                 <p className="text-on-surface-variant text-lg leading-relaxed">
@@ -405,7 +405,7 @@ export default function LandingPage() {
               className="bg-white rounded-[40px] p-8 md:p-16 shadow-2xl shadow-primary/5 border border-surface-container"
             >
               <div className="text-center space-y-4 mb-12">
-                <h2 className="text-3xl md:text-5xl font-bold">문의하기</h2>
+                <h2 className="text-[22px] md:text-5xl font-bold">문의하기</h2>
                 <p className="text-on-surface-variant leading-tight">
                   여러분의 의견이 더 나은 서비스로 이어집니다.
                   <br />
@@ -425,7 +425,7 @@ export default function LandingPage() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, name: e.target.value }))
                       }
-                      className="w-full px-5 py-4 bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                      className="w-full px-5 py-4 placeholder:text-[15px] bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
                       placeholder="성함을 입력하세요"
                     />
                   </div>
@@ -439,7 +439,7 @@ export default function LandingPage() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, email: e.target.value }))
                       }
-                      className="w-full px-5 py-4 bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
+                      className="w-full px-5 py-4 placeholder:text-[15px] bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none"
                       placeholder="email@example.com"
                     />
                   </div>
@@ -455,7 +455,7 @@ export default function LandingPage() {
                     onChange={(e) =>
                       setForm((prev) => ({ ...prev, content: e.target.value }))
                     }
-                    className="w-full px-5 py-4 bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none resize-none"
+                    className="w-full px-5 py-4 placeholder:text-[15px] bg-surface rounded-2xl border border-transparent focus:border-primary focus:bg-white transition-all outline-none resize-none"
                     placeholder="문의 내용을 자세히 적어주세요"
                   ></textarea>
                 </div>

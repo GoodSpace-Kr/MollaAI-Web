@@ -128,11 +128,15 @@ const Navigation = ({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className={`absolute top-full left-0 w-full border-t border-surface-container overflow-hidden md:hidden transition-all duration-300 ${
-              isScrolled
-                ? "bg-surface/80 backdrop-blur-md shadow-sm"
-                : "bg-white/90 backdrop-blur-md shadow-sm"
-            }`}
+            className="
+  absolute top-full left-0 w-full
+  border-t border-surface-container
+  overflow-hidden
+  md:hidden
+  transition-all duration-300
+  bg-white/90
+  shadow-sm
+"
           >
             <div className="p-6 flex flex-col gap-4">
               {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
@@ -163,9 +167,7 @@ const Navigation = ({
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div
                   className={`mt-2 ${
-                    isDevMode
-                      ? "grid grid-cols-2 gap-4"
-                      : "flex justify-center "
+                    isDevMode ? "grid grid-cols-2 gap-4" : "w-full"
                   }`}
                 >
                   <button
@@ -173,7 +175,7 @@ const Navigation = ({
                       openLogin();
                       setMobileMenuOpen(false);
                     }}
-                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                    className="w-full bg-surface text-on-surface py-3 rounded-xl font-bold"
                   >
                     로그인
                   </button>
@@ -184,7 +186,7 @@ const Navigation = ({
                         openDevLogin();
                         setMobileMenuOpen(false);
                       }}
-                      className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                      className="w-full bg-surface text-on-surface py-3 rounded-xl font-bold"
                     >
                       Dev
                     </button>

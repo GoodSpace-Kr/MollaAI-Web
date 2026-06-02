@@ -89,7 +89,7 @@ const ReportListPage = () => {
               planName={PLAN_LABEL[subscription.planType]}
             />
 
-            <div className="flex flex-col justify-between gap-5 rounded-[28px] bg-white border border-[#EEF2F7] shadow-card px-8 py-7">
+            <div className="flex flex-col justify-between gap-5 rounded-[28px] bg-white border border-[#EEF2F7] shadow-card p-7 md:px-8 md:py-7">
               <div className="flex justify-between ">
                 <div className="">
                   <p className="text-[#62748E] text-[17px] font-semibold">

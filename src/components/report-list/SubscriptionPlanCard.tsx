@@ -22,7 +22,7 @@ const SubscriptionPlanCard = ({
   return (
     <>
       <div
-        className="relative overflow-hidden rounded-[32px] p-10 flex flex-col w-full"
+        className="relative overflow-hidden rounded-[32px] p-7 md:p-10 flex flex-col w-full"
         style={{
           background: "#19367a",
           boxShadow: "0px 20px 25px -5px #c6d2ff, 0px 8px 10px -6px #c6d2ff",

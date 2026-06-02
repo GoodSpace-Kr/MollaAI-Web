@@ -64,7 +64,7 @@ export const Navigation: NavItem[] = [
 export const Problems: Problem[] = [
   {
     icon: <Brain className="text-primary" size={32} />,
-    title: "틀릴까봐 두려운 마음",
+    title: "두려운 마음",
     desc: "문법이 맞는지, 발음이 이상한지\n머릿속으로 번역하느라 타이밍을 놓칩니다.",
   },
   // {

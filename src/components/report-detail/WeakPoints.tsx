@@ -19,7 +19,7 @@ const WeakPoints = ({ items }: WeakPointsProps) => {
         WeakPoints
       </h2>
 
-      <div className="rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] px-8 py-10 md:p-10">
+      <div className="rounded-[28px] bg-white border border-[#EEF2F7] shadow-[0_4px_12px_rgba(15,23,42,0.08)] p-6 md:p-10">
         <p className="text-[#64748B] text-[17px] font-medium mb-4">
           다음 영역에서 지속적인 실수가 발견되었습니다.
         </p>
@@ -56,10 +56,14 @@ const WeakPoints = ({ items }: WeakPointsProps) => {
           })}
         </div>
 
-        <div className="rounded-[20px] border border-dashed border-[#E2E8F0] bg-[#F8FAFC] px-7 py-6 flex items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
-            <div className="w-[58px] h-[58px] rounded-[16px] bg-white shadow-[0_2px_8px_rgba(15,23,42,0.08)] flex items-center justify-center">
-              <img src={bookIcon} alt="" className="w-7 h-7 object-contain" />
+        <div className="flex flex-col md:flex-row rounded-[20px] border border-dashed border-[#E2E8F0] bg-[#F8FAFC] p-3 md:px-7 md:py-6 flex items-center justify-between gap-3 md:gap-6">
+          <div className="flex items-center gap-1 md:gap-5">
+            <div className="w-[35px] h-[35px] md:w-[58px] md:h-[58px] rounded-[10px] bg-white shadow-[0_2px_8px_rgba(15,23,42,0.08)] flex items-center justify-center">
+              <img
+                src={bookIcon}
+                alt=""
+                className="w-4 h-4 md:w-7 md:h-7 object-contain"
+              />
             </div>
 
             <div>
