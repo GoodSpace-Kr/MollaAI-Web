@@ -84,7 +84,11 @@ const FullSessionScript = ({ items }: FullSessionScriptProps) => {
       <div className="overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white shadow-card">
         {visibleItems.length > 0 ? (
           visibleItems.map((item) => (
-            <ScriptMessage key={item.id} item={item} />
+            <ScriptMessage
+              key={item.id}
+              item={item}
+              activeFilter={activeFilter}
+            />
           ))
         ) : (
           <div className="px-8 py-12 text-center text-[#64748B]">

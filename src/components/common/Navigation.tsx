@@ -4,6 +4,7 @@ import logo from "../../assest/logo-name.svg";
 import { Navigation as NavItem } from "../../constants/mockData";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import reportIcon from "../../assest/icon/reports.svg";
 
 type NavigationProps = {
   isScrolled: boolean;
@@ -27,7 +28,7 @@ const Navigation = ({
 }: NavigationProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, clearAuth } = useAuthStore();
+  const { isAuthenticated, clearAuth, hasHydrated } = useAuthStore();
 
   const isLandingPage = location.pathname === "/";
   const isDevMode = import.meta.env.DEV;
@@ -39,10 +40,8 @@ const Navigation = ({
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-surface/80 backdrop-blur-md shadow-sm"
-          : "bg-transparent"
+      className={`fixed top-0 w-full z-50 backdrop-blur-md transition-[background-color,box-shadow] duration-300 ${
+        isScrolled ? "bg-white/80 shadow-sm" : "bg-white/0 shadow-none"
       }`}
     >
       <div className="relative max-w-7xl mx-auto h-[90px] px-6 md:px-12 flex items-center justify-center">
@@ -61,9 +60,9 @@ const Navigation = ({
           <img src={logo} alt="Molla AI Logo" className="h-8 w-auto" />
         </div>
 
-        {/* 섹션 네비게이션 — 랜딩 페이지에서만 표시 */}
+        {/* 섹션 네비게이션 */}
         {isLandingPage && (
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 mx-4 ">
+          <div className="hidden md:flex h-[90px] items-center gap-4 lg:gap-8 mx-4">
             {NavItem.map((item) => (
               <a
                 key={item.id}
@@ -78,18 +77,30 @@ const Navigation = ({
         )}
 
         {/* 데스크톱 버튼 영역 */}
-        <div className="hidden md:flex absolute right-6 lg:right-12 items-center gap-2 lg:gap-4 shrink-0">
-          {isAuthenticated ? (
-            /* 인증 상태: 로그아웃 버튼 */
-            <button
-              onClick={handleLogout}
-              className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
-            >
-              <LogOut size={16} className="lg:w-4.5 lg:h-4.5" />
-              로그아웃
-            </button>
+        <div className="hidden md:flex absolute right-6 lg:right-12 items-center justify-end gap-2 lg:gap-4 shrink-0 min-w-[280px]">
+          {!hasHydrated ? (
+            <div className="h-10 w-full" />
+          ) : isAuthenticated ? (
+            <>
+              <button
+                onClick={handleLogout}
+                className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+              >
+                <LogOut size={16} className="lg:w-4.5 lg:h-4.5" />
+                로그아웃
+              </button>
+
+              <button
+                onClick={() => {
+                  navigate("/reports");
+                }}
+                className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+              >
+                <img src={reportIcon} className="w-4 h-4 lg:w-5 lg:h-5" />
+                나의 리포트
+              </button>
+            </>
           ) : (
-            /* 비인증 상태: 로그인 + Dev 버튼 */
             <>
               <button
                 onClick={openLogin}
@@ -129,14 +140,13 @@ const Navigation = ({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="
-  absolute top-full left-0 w-full
-  border-t border-surface-container
-  overflow-hidden
-  md:hidden
-  transition-all duration-300
-  bg-white/90
-  shadow-sm
-"
+              absolute top-full left-0 w-full
+              border-t border-surface-container
+              overflow-hidden
+              md:hidden
+              bg-white/90
+              shadow-sm
+            "
           >
             <div className="p-6 flex flex-col gap-4">
               {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
@@ -152,17 +162,28 @@ const Navigation = ({
                   </a>
                 ))}
 
-              {isAuthenticated ? (
-                /* 인증 상태: 로그아웃 버튼 */
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="bg-surface text-on-surface py-3 rounded-xl font-bold"
-                >
-                  로그아웃
-                </button>
+              {!hasHydrated ? null : isAuthenticated ? (
+                // 인증 상태: 로그아웃 버튼
+                <>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                  >
+                    로그아웃
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate("/reports");
+                    }}
+                    className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+                  >
+                    <img src={reportIcon} className="w-4 h-4 lg:w-5 lg:h-5" />
+                    나의 리포트
+                  </button>
+                </>
               ) : (
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div

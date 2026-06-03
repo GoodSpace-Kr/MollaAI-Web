@@ -67,11 +67,6 @@ export default function LandingPage() {
   };
 
   const handleStartTrial = () => {
-    if (isAuthenticated) {
-      navigate("/reports");
-      return;
-    }
-
     openSignup();
   };
 
@@ -79,12 +74,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white selection:bg-primary/20 font-sans antialiased">
       <main>
         {/* Hero Section */}
-        <section className="pb-16 pt-35 md:pt-40 md:pb-24 lg:pb-25 px-6 lg:px-10 max-w-7xl mx-auto overflow-hidden">
+        <section className="pb-16 pt-35 md:pb-24 md:pt-35 px-6 lg:px-10 max-w-7xl mx-auto overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.4 }}
               className="space-y-6 md:space-y-6 text-center lg:text-left"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 bg-primary-container/10 text-primary rounded-full text-xs md:text-sm font-bold mx-auto lg:mx-0">
@@ -107,15 +102,17 @@ export default function LandingPage() {
                 <br />
                 고객님의 속도와 관심사에 100% 맞춰줍니다.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
-                  onClick={handleStartTrial}
-                  className="bg-primary text-on-primary px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 group"
-                >
-                  무료 체험 시작하기
-                  <ArrowRight className="" size={20} />
-                </button>
-              </div>
+              {!isAuthenticated && (
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <button
+                    onClick={handleStartTrial}
+                    className="bg-primary text-on-primary px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 group"
+                  >
+                    무료 체험 시작하기
+                    <ArrowRight className="" size={20} />
+                  </button>
+                </div>
+              )}
             </motion.div>
 
             <motion.div
@@ -124,7 +121,7 @@ export default function LandingPage() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="relative aspect-square md:aspect-video lg:aspect-auto lg:h-[650px] flex items-center justify-center"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent rounded-full blur-[120px]" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent rounded-full blur-[60px]" />
               <div className="relative z-10 w-full max-w-md bg-white p-6 rounded-[40px] shadow-2xl border border-surface-container transform rotate-3 hover:rotate-0 transition-transform duration-700">
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 ml-2">

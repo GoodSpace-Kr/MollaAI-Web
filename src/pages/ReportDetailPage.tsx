@@ -26,24 +26,7 @@ import opicLogo from "../assest/opic.svg";
 import FullSessionScript, {
   type ScriptMessageItem,
 } from "@/components/report-detail/full-script/FullSessionScript";
-
-const logoMap = {
-  IELTS: {
-    logoSrc: ieltsLogo,
-    logoAlt: "IELTS",
-    maxScore: "9.0",
-  },
-  TOEIC: {
-    logoSrc: toeicLogo,
-    logoAlt: "TOEIC Speaking",
-    maxScore: "990",
-  },
-  OPIC: {
-    logoSrc: opicLogo,
-    logoAlt: "ACTFL OPIc",
-    maxScore: undefined,
-  },
-} as const;
+import { logoMap } from "@/constants/reportDetailData";
 
 const formatDate = (dateString: string) => {
   return dateString.slice(0, 10).replace(/-/g, ".");
