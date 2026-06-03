@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { fadeIn } from "@/pages/LandingPage";
+import { AnimatePresence, motion } from "motion/react";
 
 export type HabitAnalysisItem = {
   id: number;
@@ -48,42 +49,67 @@ const HabitAnalysis = ({ items }: HabitAnalysisProps) => {
                   </span>
                 </div>
 
-                {isOpen ? (
-                  <ChevronDown
-                    size={28}
-                    strokeWidth={2.5}
-                    className="text-[#CBD5E1]"
-                  />
-                ) : (
+                <motion.div
+                  animate={{
+                    rotate: isOpen ? 90 : 0,
+                  }}
+                  transition={{
+                    duration: 0.2,
+                  }}
+                >
                   <ChevronRight
                     size={28}
                     strokeWidth={2.5}
                     className="text-[#CBD5E1]"
                   />
-                )}
+                </motion.div>
               </button>
 
-              {isOpen && (
-                <div className="border-t border-[#F1F5F9] px-7 py-5 flex flex-col gap-6">
-                  <div>
-                    <p className="text-[#94A3B8] text-[14px] font-bold uppercase">
-                      Evidence
-                    </p>
-                    <p className="mt-3 text-[#64748B] text-[16px] font-medium leading-7">
-                      {item.evidence}
-                    </p>
-                  </div>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{
+                      height: 0,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      height: "auto",
+                      opacity: 1,
+                    }}
+                    exit={{
+                      height: 0,
+                      opacity: 0,
+                    }}
+                    transition={{
+                      duration: 0.25,
+                      ease: "easeInOut",
+                    }}
+                    className="overflow-hidden"
+                  >
+                    <div className="border-t border-[#F1F5F9] px-7 py-5 flex flex-col gap-6">
+                      <div>
+                        <p className="text-[#94A3B8] text-[14px] font-bold uppercase">
+                          Evidence
+                        </p>
 
-                  <div>
-                    <p className="text-[#94A3B8] text-[14px] font-bold uppercase">
-                      Suggestion
-                    </p>
-                    <p className="mt-3 text-[#DC2626] text-[16px] font-bold leading-7">
-                      {item.suggestion}
-                    </p>
-                  </div>
-                </div>
-              )}
+                        <p className="mt-3 text-[#64748B] text-[16px] font-medium leading-7">
+                          {item.evidence}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-[#94A3B8] text-[14px] font-bold uppercase">
+                          Suggestion
+                        </p>
+
+                        <p className="mt-3 text-[#DC2626] text-[16px] font-bold leading-7">
+                          {item.suggestion}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}

@@ -172,3 +172,21 @@ export const WEAK_POINT_STYLE = {
     icon: "#D98224",
   },
 } as const;
+
+export const logoMap = {
+  IELTS: {
+    logoSrc: ieltsLogo,
+    logoAlt: "IELTS",
+    maxScore: "9.0",
+  },
+  TOEIC: {
+    logoSrc: toeicLogo,
+    logoAlt: "TOEIC Speaking",
+    maxScore: "200",
+  },
+  OPIC: {
+    logoSrc: opicLogo,
+    logoAlt: "ACTFL OPIc",
+    maxScore: undefined,
+  },
+} as const;

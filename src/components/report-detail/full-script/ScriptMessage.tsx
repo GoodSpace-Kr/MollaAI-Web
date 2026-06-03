@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ScriptTag, { type ScriptTagType } from "./ScriptTag";
 import audioIcon from "../../../assest/icon/audio.svg";
 import playIcon from "../../../assest/icon/play.svg";
+import { ScriptFilter } from "./FullSessionScript";
 
 type ScriptCorrection = {
   text: string;
@@ -24,6 +25,7 @@ export type ScriptMessageData = {
 
 type ScriptMessageProps = {
   item: ScriptMessageData;
+  activeFilter: ScriptFilter;
 };
 
 const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
@@ -44,16 +46,24 @@ const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
 
     const currentAudio = audioRef.current;
 
+    // 이미 생성된 오디오가 있고 재생 중이면 일시정지
     if (currentAudio && !currentAudio.paused) {
       currentAudio.pause();
-      currentAudio.currentTime = 0;
-      resetAudioState();
+      setIsPlaying(false);
+      setIsLoading(false);
       return;
     }
 
     setIsLoading(true);
 
     try {
+      // 기존 오디오가 있으면 이어서 재생
+      if (currentAudio) {
+        await currentAudio.play();
+        setIsPlaying(true);
+        return;
+      }
+
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
@@ -69,19 +79,15 @@ const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
       });
 
       audio.addEventListener("ended", () => {
-        resetAudioState();
+        setIsPlaying(false);
+        setProgress(0);
         audio.currentTime = 0;
-      });
-
-      audio.addEventListener("pause", () => {
-        if (audio.currentTime >= audio.duration) return;
-        resetAudioState();
       });
 
       await audio.play();
     } catch (error) {
       console.error("[AudioButton] 재생 실패:", error);
-      resetAudioState();
+      setIsPlaying(false);
     } finally {
       setIsLoading(false);
     }
@@ -100,21 +106,23 @@ const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
       onClick={handleClick}
       disabled={isLoading || !audioUrl}
       className="
-        relative
-        flex
-        size-[38px]
-        shrink-0
-        items-center
-        justify-center
-        rounded-full
-        bg-white
-        text-[#94A3B8]
-        transition-all
-        hover:bg-[#F8FAFC]
-        hover:text-[#5272FF]
-        disabled:cursor-not-allowed
-        disabled:opacity-40
-      "
+          group
+          relative
+          flex
+          size-[38px]
+          shrink-0
+          items-center
+          justify-center
+          rounded-full
+          bg-white
+          text-[#94A3B8]
+          transition-all
+          hover:text-[#5272FF]
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-primary/30
+          disabled:opacity-40
+        "
     >
       <span
         className="
@@ -126,16 +134,28 @@ const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
         "
       />
 
-      {isPlaying && (
+      {progress > 0 && (
         <span
           className="absolute inset-0 rounded-full"
           style={{
-            background: `conic-gradient(var(--color-primary) ${progress * 3.6}deg, transparent 0deg)`,
+            background: `conic-gradient(var(--color-primary) ${
+              progress * 3.6
+            }deg, transparent 0deg)`,
           }}
         />
       )}
 
-      <span className="absolute inset-[2px] rounded-full bg-white" />
+      <span
+        className="
+          absolute
+          inset-[2px]
+          rounded-full
+          bg-white
+          transition-colors
+          group-hover:bg-[#F8FAFC]
+          group-focus-visible:bg-[#F8FAFC]
+        "
+      />
 
       <img
         src={isPlaying ? playIcon : audioIcon}
@@ -146,12 +166,15 @@ const AudioButton = ({ audioUrl }: { audioUrl?: string }) => {
   );
 };
 
-const ScriptMessage = ({ item }: ScriptMessageProps) => {
+const ScriptMessage = ({ item, activeFilter }: ScriptMessageProps) => {
   const isAI = item.speaker === "ai";
+  const shouldHighlightUser = item.speaker === "user" && activeFilter === "all";
 
   return (
     <div
-      className={`flex gap-5  px-8 py-7 last:border-b-0 ${!isAI ? "bg-[#2457FD]/5" : ""}`}
+      className={`flex gap-5 px-8 py-7 last:border-b-0 ${
+        shouldHighlightUser ? "bg-[#2457FD]/5" : ""
+      }`}
     >
       <div
         className={`flex size-[48px] shrink-0 items-center justify-center rounded-[14px] ${
