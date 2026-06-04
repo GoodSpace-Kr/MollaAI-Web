@@ -67,24 +67,36 @@ const RootLayout = () => {
   const scrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
     id: string,
+    closeMobileMenuFirst = false,
   ) => {
     e.preventDefault();
 
-    const element = document.getElementById(id);
+    const scroll = () => {
+      const element = document.getElementById(id);
 
-    if (element) {
+      if (!element) return;
+
       const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
-      const offsetPosition = elementRect - bodyRect - offset;
+      const offsetPosition = window.scrollY + elementRect - offset;
 
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
+    };
 
+    if (closeMobileMenuFirst) {
       setMobileMenuOpen(false);
+
+      window.setTimeout(() => {
+        scroll();
+      }, 220);
+
+      return;
     }
+
+    scroll();
   };
 
   return (
