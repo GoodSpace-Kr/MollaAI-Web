@@ -5,6 +5,7 @@ import { Navigation as NavItem } from "../../constants/mockData";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import reportIcon from "../../assest/icon/reports.svg";
+import { IS_DEV_MODE } from "@/config/env";
 
 type NavigationProps = {
   isScrolled: boolean;
@@ -15,6 +16,7 @@ type NavigationProps = {
   scrollToSection: (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
     id: string,
+    closeMobileMenuFirst?: boolean,
   ) => void;
 };
 
@@ -31,7 +33,6 @@ const Navigation = ({
   const { isAuthenticated, clearAuth, hasHydrated } = useAuthStore();
 
   const isLandingPage = location.pathname === "/";
-  const isDevMode = import.meta.env.DEV;
 
   const handleLogout = () => {
     clearAuth();
@@ -44,10 +45,10 @@ const Navigation = ({
         isScrolled ? "bg-white/80 shadow-sm" : "bg-white/0 shadow-none"
       }`}
     >
-      <div className="relative max-w-7xl mx-auto h-[90px] px-6 md:px-12 flex items-center justify-center">
+      <div className="relative max-w-7xl mx-auto h-[75px] md:h-[92px] px-6 md:px-12 flex items-center justify-center">
         {/* 로고 */}
         <div
-          className="absolute left-6 lg:left-12 flex items-center cursor-pointer shrink-0"
+          className="absolute left-9 lg:left-12 flex items-center cursor-pointer shrink-0"
           onClick={() => {
             if (location.pathname === "/") {
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -57,7 +58,7 @@ const Navigation = ({
             navigate("/");
           }}
         >
-          <img src={logo} alt="Molla AI Logo" className="h-8 w-auto" />
+          <img src={logo} alt="Molla AI Logo" className="h-5 md:h-8 w-auto" />
         </div>
 
         {/* 섹션 네비게이션 */}
@@ -110,7 +111,7 @@ const Navigation = ({
                 로그인 / 회원가입
               </button>
 
-              {isDevMode && (
+              {IS_DEV_MODE && (
                 <button
                   onClick={openDevLogin}
                   className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
@@ -148,7 +149,7 @@ const Navigation = ({
               shadow-sm
             "
           >
-            <div className="p-6 flex flex-col gap-4">
+            <div className="p-4 flex flex-col gap-4">
               {/* 섹션 링크 — 랜딩 페이지에서만 표시 */}
               {isLandingPage &&
                 NavItem.map((item) => (
@@ -156,7 +157,7 @@ const Navigation = ({
                     key={item.id}
                     href={`#${item.id}`}
                     className="text-on-surface-variant py-2 font-semibold"
-                    onClick={(e) => scrollToSection(e, item.id)}
+                    onClick={(e) => scrollToSection(e, item.id, true)}
                   >
                     {item.label}
                   </a>
@@ -164,13 +165,13 @@ const Navigation = ({
 
               {!hasHydrated ? null : isAuthenticated ? (
                 // 인증 상태: 로그아웃 버튼
-                <>
+                <div className="grid grid-cols-2 gap-4">
                   <button
                     onClick={() => {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="bg-surface text-on-surface py-3 rounded-xl font-bold"
+                    className="w-full bg-surface text-on-surface py-3 rounded-xl font-bold"
                   >
                     로그아웃
                   </button>
@@ -178,17 +179,16 @@ const Navigation = ({
                     onClick={() => {
                       navigate("/reports");
                     }}
-                    className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
+                    className="w-full bg-surface text-on-surface py-3 rounded-xl font-bold"
                   >
-                    <img src={reportIcon} className="w-4 h-4 lg:w-5 lg:h-5" />
                     나의 리포트
                   </button>
-                </>
+                </div>
               ) : (
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div
-                  className={`mt-2 ${
-                    isDevMode ? "grid grid-cols-2 gap-4" : "w-full"
+                  className={`${
+                    IS_DEV_MODE ? "grid grid-cols-2 gap-4" : "w-full"
                   }`}
                 >
                   <button
@@ -201,7 +201,7 @@ const Navigation = ({
                     로그인
                   </button>
 
-                  {isDevMode && (
+                  {IS_DEV_MODE && (
                     <button
                       onClick={() => {
                         openDevLogin();

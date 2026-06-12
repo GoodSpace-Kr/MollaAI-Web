@@ -217,7 +217,7 @@ export default function LandingPage() {
               </h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:mx-50">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-5 md:mx-0">
               {Plan.map((plan, i) => (
                 <motion.div
                   key={i}
