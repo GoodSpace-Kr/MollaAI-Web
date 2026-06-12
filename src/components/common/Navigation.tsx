@@ -5,6 +5,7 @@ import { Navigation as NavItem } from "../../constants/mockData";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import reportIcon from "../../assest/icon/reports.svg";
+import { IS_DEV_MODE } from "@/config/env";
 
 type NavigationProps = {
   isScrolled: boolean;
@@ -32,7 +33,6 @@ const Navigation = ({
   const { isAuthenticated, clearAuth, hasHydrated } = useAuthStore();
 
   const isLandingPage = location.pathname === "/";
-  const isDevMode = import.meta.env.DEV;
 
   const handleLogout = () => {
     clearAuth();
@@ -111,7 +111,7 @@ const Navigation = ({
                 로그인 / 회원가입
               </button>
 
-              {isDevMode && (
+              {IS_DEV_MODE && (
                 <button
                   onClick={openDevLogin}
                   className="text-on-surface font-semibold text-[11px] lg:text-sm px-2 lg:px-4 py-2 hover:text-primary transition-colors flex items-center gap-1 lg:gap-2"
@@ -188,7 +188,7 @@ const Navigation = ({
                 /* 비인증 상태: 로그인 + Dev 버튼 */
                 <div
                   className={`${
-                    isDevMode ? "grid grid-cols-2 gap-4" : "w-full"
+                    IS_DEV_MODE ? "grid grid-cols-2 gap-4" : "w-full"
                   }`}
                 >
                   <button
@@ -201,7 +201,7 @@ const Navigation = ({
                     로그인
                   </button>
 
-                  {isDevMode && (
+                  {IS_DEV_MODE && (
                     <button
                       onClick={() => {
                         openDevLogin();

@@ -16,12 +16,13 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
         </Route>
 
+        {/* NicePay 결제 인증 완료 후 리다이렉트 → approvePayment 호출 → /reports */}
+        <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+
         {/* 인증 전용 - /로 리다이렉트 */}
         <Route element={<PrivateRoute />}>
           <Route path="/reports" element={<ReportListPage />} />
           <Route path="/reports/:id" element={<ReportDetailPage />} />
-          {/* NicePay 결제 인증 완료 후 리다이렉트 → approvePayment 호출 → /reports */}
-          <Route path="/payment/callback" element={<PaymentCallbackPage />} />
         </Route>
       </Route>
     </Routes>

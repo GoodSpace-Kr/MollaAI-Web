@@ -29,7 +29,7 @@ const RootLayout = () => {
   const [paymentPlan, setPaymentPlan] = useState<PaymentPlan | null>(null);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
-  const { setTokens } = useAuthStore();
+  const { setTokens, isAuthenticated, hasHydrated } = useAuthStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,7 +51,15 @@ const RootLayout = () => {
   const openDevLogin = () => setDevModalOpen(true);
 
   const openSignupWithPayment = (plan: PaymentPlan) => {
+    if (!hasHydrated) return;
+
     setPaymentPlan(plan);
+
+    if (isAuthenticated) {
+      setPaymentModalOpen(true);
+      return;
+    }
+
     setAuthModalOpen(true);
   };
 
@@ -61,7 +69,15 @@ const RootLayout = () => {
   }) => {
     setTokens(tokens);
     setAuthModalOpen(false);
-    setPaymentModalOpen(true);
+
+    if (paymentPlan) {
+      setPaymentModalOpen(true);
+    }
+  };
+
+  const closePaymentModal = () => {
+    setPaymentModalOpen(false);
+    setPaymentPlan(null);
   };
 
   const scrollToSection = (
@@ -136,7 +152,7 @@ const RootLayout = () => {
       {paymentPlan && (
         <PaymentModal
           isOpen={paymentModalOpen}
-          onClose={() => setPaymentModalOpen(false)}
+          onClose={closePaymentModal}
           planName={paymentPlan.planName}
           planType={paymentPlan.planType}
           amount={paymentPlan.amount}

@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/authStore";
 import axios, { type InternalAxiosRequestConfig } from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 type RetryRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;

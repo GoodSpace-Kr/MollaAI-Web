@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, CreditCard, Building2 } from "lucide-react";
-import { PAYMENT_STORAGE_KEY, type PendingPayment } from "@/pages/PaymentCallbackPage";
+import {
+  PAYMENT_STORAGE_KEY,
+  type PendingPayment,
+} from "@/pages/PaymentCallbackPage";
+import { PAYMENT_CALLBACK_URL } from "@/config/env";
 
 type PaymentModalProps = {
   isOpen: boolean;
@@ -58,22 +62,27 @@ const PaymentModal = ({
 
     const orderId = `ORDER-${Date.now()}`;
 
-    // 콜백 페이지에서 approvePayment 호출에 필요한 정보를 sessionStorage에 저장
-    const pending: PendingPayment = { amount, planType };
+    const pending: PendingPayment = {
+      amount,
+      planType,
+      orderId,
+    };
+
     sessionStorage.setItem(PAYMENT_STORAGE_KEY, JSON.stringify(pending));
 
     setIsProcessing(true);
     setError("");
 
-    // NicePay 결제 인증 완료 후 브라우저가 returnUrl로 리다이렉트됨
-    // → /payment/callback 페이지에서 tid/orderId를 받아 approvePayment 호출
     window.AUTHNICE.requestPay({
       clientId: CLIENT_ID,
       method: "card",
       orderId,
       amount,
       goodsName: `MOLLAI ${planName}`,
-      returnUrl: `${window.location.origin}/payment/callback`,
+
+      // 백엔드가 NicePay 결과를 먼저 받음
+      returnUrl: PAYMENT_CALLBACK_URL,
+
       fnError: (result) => {
         setIsProcessing(false);
         sessionStorage.removeItem(PAYMENT_STORAGE_KEY);
@@ -114,13 +123,13 @@ const PaymentModal = ({
               </button>
             </div>
 
-            <p className="text-center text-sm text-on-surface-variant mb-8">
+            {/* <p className="text-center text-sm text-on-surface-variant mb-8">
               <span className="font-bold text-on-surface">{planName}</span> 플랜
               ·{" "}
               <span className="font-bold text-primary">
                 {amount.toLocaleString()}원 / 월
               </span>
-            </p>
+            </p> */}
 
             <div className="grid grid-cols-2 gap-4">
               {/* 신용카드 */}
